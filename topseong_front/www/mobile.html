@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>Accordion</title>
+
+    <link href="styles.css" rel="stylesheet"/>
+    <link href="../dojo_common/dojox/mobile/themes/android/android.css" rel="stylesheet"/>
+	<link href="../dojo_common/dojox/mobile/themes/common/dijit/dijit.css" rel="stylesheet"/>
+	<script type="text/javascript" src="../dojo_common/dojox/mobile/deviceTheme.js" data-dojo-config="mblThemeFiles: ['base','Accordion','TabBar','dijit.Calendar']"></script>
+	<script type="text/javascript" src="../dojo_common/dojo/dojo.js" data-dojo-config="isDebug:true,async: true, mblAlwaysHideAddressBar: true"></script>
+	<script type="text/javascript">
+        var ros;
+
+		require({
+                aliases: [
+                    [ "eventemitter2","robotwebtools_amd/tools/eventemitter2"]
+                ]
+                ,
+                packages: [ 
+                    { name:"robotwebtools_amd", location:"../../robotwebtools_amd"},
+                    { name:"yujin_webtools", location: "../../yujin_webtools"},
+                    { name:"ros", location:"../../robotwebtools_amd/ros"},
+                    { name:"roswidgets", location:"../../robotwebtools_amd/roswidgets"},
+                    { name:"jquery", location:"../../jquery_common"},
+                ]},
+        [
+			"dojox/mobile/parser",
+			"dojox/mobile",
+            "dojo/ready",
+            "ros/ros",
+            "yujin_webtools/widgets/NavigationUI",
+            "roswidgets/ConnectionPanel"
+		],
+        function(parser,mobile,ready,ROS)
+        {
+            var initialize = function() {
+                ros = new ROS('ws://localhost:9090');
+                parser.parse();
+            }
+            ready(initialize);
+        }
+        );
+	</script>
+
+</head>
+<body style="visibility:hidden;">
+        <h1 data-dojo-type="dojox.mobile.Heading" style="height:100px;" >
+            <div data-dojo-type="roswidgets.ConnectionPanel"></div>
+        </h1>
+        <div id="body">                                     
+            <div data-dojo-type="yujin_webtools.widgets.NavigationUI"></div>
+        </div>
+</body>
+</html>
+

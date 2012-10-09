@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<meta name="viewport" content="user-scalable=0"/>
+<title>Hello World</title>
+<!-- load Dojo and the default dojo theme, claro -->
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="../dojo_common/dijit/themes/claro/claro.css"/>
+<script src="../dojo_common/dojo/dojo.js.uncompressed.js" data-dojo-config="async: true"></script>
+<script>
+        var ros;
+		require({
+                aliases: [
+                    [ "eventemitter2","rosjs/dist/eventemitter2"],
+                    [ "actionclient", "actionlibjs/actionclient"],
+                    [ "map","map2djs/map"]
+                ]
+                ,
+                packages: [ 
+                    { name:"jquery", location:"/jquery_common"},
+                    { name:"robotwebtools", location:"/robotwebtools_amd"},
+                    { name:"rosjs", location:"/robotwebtools_amd/rosjs"},
+                    { name:"nav2djs", location:"/robotwebtools_amd/nav2djs"},
+                    { name:"map2djs", location:"/robotwebtools_amd/map2djs"},
+                    { name:"actionlibjs", location:"/robotwebtools_amd/actionlibjs"},
+                    { name:"mjpegcanvasjs", location:"/robotwebtools_amd/mjpegcanvasjs"},
+                    { name:"yujin_webtools", location: "/yujin_webtools"},
+                    { name:"roswidgets", location:"/yujin_webtools/roswidgets"},
+                ]},
+        [
+            "dojo/parser",
+            "dojo/ready",
+            "dojo/on",
+            "dojo/dom",
+            "dijit/registry",
+            "roswidgets/ConnectionPanel",
+            "rosjs/ros",
+            "mjpegcanvasjs/mjpegcanvas",
+            "yujin_webtools/widgets/NavigationCanvas",
+            "yujin_webtools/widgets/NavigationPopup2",
+            "yujin_webtools/controller/Arrows",
+		],
+        function(parser,ready,on,dom,registry,CPanel,ROS,MjpegCanvas,NavCanvas,NavPopup,VirtualJoystick)
+        {
+            var initialize = function() {
+                ros = new ROS('ws://192.168.10.77:9090');
+                parser.parse();
+                popup = registry.byId("nav_popup");
+                canvas =registry.byId("nav_canvas");
+
+                dojo.connect(popup,"initPoseClicked",canvas,"initPoseClicked");
+                dojo.connect(popup,"setGoalClicked",canvas,"setGoalClicked");
+                dojo.connect(popup,"cancelGoalClicked",canvas,"cancelGoalClicked");
+
+                var canvas = dom.byId('mjpegcanvas');
+                var cwidth = canvas.width;
+                var cheight = canvas.height;
+
+                var mjpeg = new MjpegCanvas({
+                    host : '192.168.10.77',
+//                    topic : ['/r_forearm_cam/image_color', '/l_forearm_cam/image_color', '/wide_stereo/right/image_rect_color'],
+                    topic : '/camera/rgb/image_color',
+//                    label : ['Right Arm', 'Left Arm', 'Robot View'],
+                    canvasID : 'mjpegcanvas',
+                    width:320,
+                    height:240,
+                });
+
+            }
+            ready(initialize);
+        }
+        );
+</script>
+</head>
+<body class="claro" style="font: 14px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;">
+	<div id="headers" class="headers">
+        <img class="logo" src="img/logo.jpg"></img>
+        <p class="logo"> Web Navigator</p>
+        <div class="webtools">
+            <div class="navpopup" id="nav_popup" data-dojo-type="yujin_webtools.widgets.NavigationPopup"></div>
+            <div class="connectionpanel" data-dojo-type="roswidgets.ConnectionPanel"></div>
+        </div>
+	</div>
+    <div id="body" class="middlepanel">
+        <div class="leftbody">
+            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'map.png', serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose'"></div>
+<!--            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'6th_floor.png', serverName :'/move_base', mapTopic:'/map',mapMetaTopic:'/map_metadata',initialPoseTopic:'/initialpose'"></div>-->
+        </div>
+        <div class="rightbody">
+            <canvas id="mjpegcanvas" width="256" height="192"> </canvas>
+            <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/topseung/joy_cmd_vel'"></div>
+        </div>
+
+    </div>
+</body>
+</html>
