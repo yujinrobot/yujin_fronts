@@ -70,6 +70,8 @@ display:inline-block;
 
 .headers {
     height:15%;
+    width:100%;
+display:inline-block;
     overflow:visible;
     position:relative;
 	margin-top: 10px;

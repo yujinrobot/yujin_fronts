@@ -20,6 +20,8 @@ function(declare, lang,widgetbase,_TemplatedMixin,dom,domClass,Loader,template)
             messageType : '/geometry_msgs/Twist',
 
             postCreate : function() {
+                ros.on('connection',lang.hitch(this,this.onConnect));
+                ros.on('close',lang.hitch(this,this.onClose));
 
                 this.publisher = new ros.Topic({
                     name : this.topic,
@@ -33,7 +35,21 @@ function(declare, lang,widgetbase,_TemplatedMixin,dom,domClass,Loader,template)
         	    // Create the controls
         		this.createButtons();
                 
-                window.setInterval(lang.hitch(this,this.pub),500);
+            },
+
+            onConnect : function() {
+        		for (var i = 0; i < this.buttons.length; i++) {
+		        	this.buttons[i].setDisabled(false);
+        		}
+                this.pubTimer = window.setInterval(lang.hitch(this,this.pub),500);
+            },
+
+            onClose : function() {
+        		for (var i = 0; i < this.buttons.length; i++) {
+		        	this.buttons[i].setDisabled(true);
+        		}
+                window.clearInterval(this.pubTimer);
+
             },
 
             createButtons : function() {
@@ -46,7 +62,7 @@ function(declare, lang,widgetbase,_TemplatedMixin,dom,domClass,Loader,template)
             	this.buttons.push(this.createButton(this.turnrightAttach, "Turn Right", 39));
 
         		for (var i = 0; i < this.buttons.length; i++) {
-		        	this.buttons[i].setDisabled(false);
+		        	this.buttons[i].setDisabled(true);
         		}
             },
 

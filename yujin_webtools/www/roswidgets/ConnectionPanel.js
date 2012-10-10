@@ -6,24 +6,27 @@
  */
 
 
-define(["dojo","dojo/_base/declare","dijit/_WidgetBase","dijit/_Templated","dojo/cookie",
+define(["dojo","dojo/_base/declare","dojo/_base/lang","dijit/_WidgetBase","dijit/_Templated","dojo/cookie",
         "dojo/text","dijit/form/ComboBox","dijit/form/Button","dijit/Tooltip","roswidgets/Utils","rosjs/ros","dojo/text!./templates/ConnectionPanel.html"],
-        function(dojo,declare,_Widget,_Templated,cookie,cache,ComboBox,Button,Tooltip,utils,ROS,template)
-        {
-            return declare("roswidgets.ConnectionPanel",[_Widget, _Templated ], {
+function(dojo,declare,lang,_Widget,_Templated,cookie,cache,ComboBox,Button,Tooltip,utils,ROS,template)
+{
+    var ConnectionPanel =  declare("roswidgets.ConnectionPanel",[_Widget, _Templated ], {
     
-    templateString : template,
+        templateString : template,
     
-    defaultUrls: [ "localhost:9090" ], /* set this to a list of urls that you want to show up by default*/
+        defaultUrls: [ "localhost:9090" ], /* set this to a list of urls that you want to show up by default*/
     
     postCreate : function() {
+        if(window.ros == undefined || window.ros == null) {
+            window.ros = new ROS();
+        }
+
         // Create the constituent dijit widgets
         var instructions = "Enter the URL of your rosbridge server, in the form hostname:port";
         this.urlLabel.title = instructions;
         this.dropdown = new ComboBox({ title: instructions }, this.dropdownAttach);
         this.connectButton = new Button({}, this.connectButtonAttach);
         this.disconnectButton = new Button({}, this.disconnectButtonAttach);
-        this.tooltip = new Tooltip({},this.tooltipAttachPoint);
         
         // Populate the dropdown with previous URL values
         this.setDropdownURLs(this.loadURLs());
@@ -36,11 +39,14 @@ define(["dojo","dojo/_base/declare","dijit/_WidgetBase","dijit/_Templated","dojo
         this.connect(this.dropdown, "onKeyDown", "dropdownKeyPressed");
         this.connect(this.connectButton, "onClick", "connectPressed");
         this.connect(this.disconnectButton, "onClick", "disconnectPressed");
+
+        ros.on('connection',lang.hitch(this,this._onOpen));
+        ros.on('close',lang.hitch(this,this._onClose));
         
         // Connect ros connection callbacks
-        this.connect(ros, "onConnecting", "_onConnect");
-        this.connect(ros, "onOpen", "_onOpen");
-        this.connect(ros, "onClose", "_onClose");
+//        this.connect(ros, "onConnecting", "_onConnect");
+//        this.connect(ros, "onOpen", "_onOpen");
+//        this.connect(ros, "onClose", "_onClose");
     },
     
     dropdownKeyPressed: function(e) {
@@ -59,7 +65,10 @@ define(["dojo","dojo/_base/declare","dijit/_WidgetBase","dijit/_Templated","dojo
                 var port = url.slice(i+1, url.length);
                 
                 try {
-                    ros.connect(host, port);
+                    var connectingurl = 'ws://' + url;
+                    ros.connect(connectingurl);
+                    this._onConnect();
+                    ros.emit('host',host);
                 } catch (e) {
                     this.showTooltip(e.message);
                     return;
@@ -78,7 +87,7 @@ define(["dojo","dojo/_base/declare","dijit/_WidgetBase","dijit/_Templated","dojo
     },
     
     disconnectPressed : function(event) {
-        ros.disconnect();
+        ros.close();
     },
     
     onConnecting : function() {
@@ -129,14 +138,15 @@ define(["dojo","dojo/_base/declare","dijit/_WidgetBase","dijit/_Templated","dojo
         if (this.tooltipTimer) {
             window.clearTimeout(this.tooltipTimer);
         }
-        this.tooltipTimer = window.setTimeout(dojo.hitch(this, "hideTooltip"), 3000);
-        this.tooltip.show(this);
+        window.setTimeout(dojo.hitch(this, this.hideTooltip), 3000);
+        Tooltip.show(label,this.tooltipAttachPoint,["after","above","below","before"],false,"");
+//        this.tooltip.show(this);
 //        dijit.showTooltip(label, this.tooltipAttachPoint, [ "after", "above", "below", "before" ], false, "");
     },
     
     // Immediately hides any tooltip
     hideTooltip : function() {
-        dijit.hideTooltip(this.tooltipAttachPoint);
+        Tooltip.hide(this.tooltipAttachPoint);
     },
     
     saveURL : function(url) {
@@ -202,5 +212,6 @@ define(["dojo","dojo/_base/declare","dijit/_WidgetBase","dijit/_Templated","dojo
         this.connecting = false;
     }
 
-});
+    });
+    return ConnectionPanel;
 });

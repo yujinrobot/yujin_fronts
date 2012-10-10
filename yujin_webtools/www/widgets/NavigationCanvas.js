@@ -1,12 +1,13 @@
 
 define(["dojo/_base/declare",
+        "dojo/_base/lang",
         "dijit/_WidgetBase",
         "dojo/dom",
         "dojo/dom-class",
         "./nav2d",
         "./Loader",
         ],
-function(declare,widgetbase,dom,domClass,Nav2D,Loader)
+function(declare,lang,widgetbase,dom,domClass,Nav2D,Loader)
 {
     var navCanvas = declare("yujin_webtools.widgets.NavigationCanvas",[widgetbase],
         {
@@ -22,12 +23,20 @@ function(declare,widgetbase,dom,domClass,Nav2D,Loader)
 
             postCreate : function() {
                 Loader.loadCSS("yujin_webtools/widgets/css/navcanvas.css");
+                ros.on('connection',lang.hitch(this,this.onConnect));
+                ros.on('close',lang.hitch(this,this.onClose));
 
+                // setting canvas
                 this.createCanvas();
-                this.createNav2D();
-                this.connectFunctions();
-                
                 domClass.add(this.canvas,"navigation-canvas");
+            },
+
+            onConnect : function() {
+                this.createNav2D();
+            },
+
+            onClose : function() {
+                delete this.nav2d;
             },
 
             startup : function() {
@@ -54,11 +63,6 @@ function(declare,widgetbase,dom,domClass,Nav2D,Loader)
                     initialPoseTopic : this.initialPoseTopic,
                     serverName : this.serverName,
                 });
-            },
-
-            connectFunctions : function() {
-                this.getPoseFromEvent = this.nav2d.getPoseFromEvent;
-                this.sendGoalPose = this.nav2d.sendGoalPose;
             },
 
             initPoseClicked : function() {
