@@ -11,6 +11,7 @@
 <script src="../dojo_common/dojo/dojo.js.uncompressed.js" data-dojo-config="async: true"></script>
 <script>
         var ros;
+        var mjpeg;
 		require({
                 aliases: [
                     [ "eventemitter2","rosjs/dist/eventemitter2"],
@@ -39,23 +40,25 @@
             "rosjs/ros",
             "mjpegcanvasjs/mjpegcanvas",
             "yujin_webtools/widgets/NavigationCanvas",
-            "yujin_webtools/widgets/NavigationPopup",
+            "yujin_webtools/widgets/NavigationPopup2",
             "roswidgets/MjpegViewer",
             "yujin_webtools/controller/Arrows",
 		],
-        function(parser,ready,on,dom,registry,CPanel,ROS,MjpegCanvas,NavCanvas,NavPopup)
+        function(parser,ready,on,dom,registry,CPanel,ROS,MjpegCanvas,NavCanvas,NavPopup,MjpegViewer,Arrows)
         {
             var initialize = function() {
                 ros = new ROS();
-                ros.connect( 'ws://192.168.10.77:9090');
                 parser.parse();
-                popup = registry.byId("nav_popup");
-                canvas =registry.byId("nav_canvas");
 
-                dojo.connect(popup,"initPoseClicked",canvas,"initPoseClicked");
-                dojo.connect(popup,"setGoalClicked",canvas,"setGoalClicked");
-                dojo.connect(popup,"cancelGoalClicked",canvas,"cancelGoalClicked");
+                popupmenus = registry.byId("nav_popup");
+                navcanvas =registry.byId("nav_canvas");
+
+                dojo.connect(popupmenus,"initPoseClicked",navcanvas,"initPoseClicked");
+                dojo.connect(popupmenus,"setGoalClicked",navcanvas,"setGoalClicked");
+                dojo.connect(popupmenus,"cancelGoalClicked",navcanvas,"cancelGoalClicked");
+
             }
+
             ready(initialize);
         }
         );
@@ -66,19 +69,20 @@
         <img class="logo" src="img/logo.jpg"></img>
         <p class="logo"> Web Navigator</p>
         <div class="webtools">
-<!--            <div class="connectionpanel" data-dojo-type="roswidgets.ConnectionPanel"></div>-->
-            <div class="navpopup" id="nav_popup" data-dojo-type="yujin_webtools.widgets.NavigationPopup"></div>
+            <div class="connectionpanel" data-dojo-type="roswidgets.ConnectionPanel"></div>
         </div>
 	</div>
     <div id="body" class="middlepanel">
         <div class="leftbody">
+            <div class="navpopup" id="nav_popup" data-dojo-type="yujin_webtools.widgets.NavigationPopup"></div>
 <!--            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'map.png', serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose'"></div>-->
-            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'map.png', serverName :'/move_base', mapTopic:'/map',mapMetaTopic:'/map_metadata',initialPoseTopic:'/initialpose'"></div>
+            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:null, continuous:true,serverName :'/move_base', mapTopic:'/map',mapMetaTopic:'/map_metadata',initialPoseTopic:'/initialpose'"></div>
         </div>
         <div class="rightbody">
             <center>
-                <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="host:'192.168.10.77',topic:'/wide_stereo/right/image_rect_color', width:256, height:192, quality:100"></div>
-                <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/topseung/joy_cmd_vel'"></div>
+            <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/wide_stereo/right/image_rect_color', width:256, height:192, quality:100"></div>
+         <!--   <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/topseung/joy_cmd_vel'"></div> -->
+            <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/base_controller/command'"></div> 
             </center>
         </div>
 
