@@ -2,10 +2,10 @@
 required packages.
 ---------------------
 * robot_pose_publisher
- svn co http://wpi-rail.googlecode.com/svn/trunk/distribution/wpi-rail-ros-pkg/robot_pose_publisher
+svn co http://wpi-rail.googlecode.com/svn/trunk/distribution/wpi-rail-ros-pkg/robot_pose_publisher
 
 * mjpeg_server
-sudo apt-get install ros-fuerte-remote-lab
+svn co http://svn.code.sf.net/p/bosch-ros-pkg/code/trunk/stacks/mjpeg_server
 
 * rosbridge_suite stack
 sudo apt-get install ros-fuerte-rosbridge-suite
@@ -19,9 +19,16 @@ rosinstall . https://raw.github.com/RobotWebTools/rosinstall/master/robotwebtool
 * robotwebtool_amd
 git clone https://github.com/yujinrobot/robotwebtools_amd.git
 
+
+required deps
+------------------------
+
+sudo apt-get install apache2
+
 how to compile
 -------------------
 rosmake robotwebtool_amd
+rosmake mjpeg_server
 rosmake robot_pose_publisher
 
 how to start(experimental. unified version will be provided later)

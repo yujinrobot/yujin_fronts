@@ -72,12 +72,11 @@
 	</div>
     <div id="body" class="middlepanel">
         <div class="leftbody">
-<!--            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'map.png', serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose'"></div>-->
-            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'map.png', serverName :'/move_base', mapTopic:'/map',mapMetaTopic:'/map_metadata',initialPoseTopic:'/initialpose'"></div>
+            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:null, serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose'"></div>
         </div>
         <div class="rightbody">
             <center>
-                <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="host:'192.168.10.77',topic:'/wide_stereo/right/image_rect_color', width:256, height:192, quality:100"></div>
+                <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/kinect/rgb/image_rect_color', width:256, height:192, quality:100"></div>
                 <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/topseung/joy_cmd_vel'"></div>
             </center>
         </div>
