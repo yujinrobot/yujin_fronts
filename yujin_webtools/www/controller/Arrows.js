@@ -41,7 +41,7 @@ function(declare, lang,widgetbase,_TemplatedMixin,dom,domClass,Loader,template)
         		for (var i = 0; i < this.buttons.length; i++) {
 		        	this.buttons[i].setDisabled(false);
         		}
-                this.pubTimer = window.setInterval(lang.hitch(this,this.pub),100);
+                this.pubTimer = window.setInterval(lang.hitch(this,this.pub),500);
             },
 
             onClose : function() {
