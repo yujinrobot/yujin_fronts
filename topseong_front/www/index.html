@@ -47,7 +47,7 @@
         {
             var initialize = function() {
                 ros = new ROS();
-                ros.connect( 'ws://192.168.10.77:9090');
+                ros.connect( 'ws://192.168.1.93:9090');
                 parser.parse();
                 popup = registry.byId("nav_popup");
                 canvas =registry.byId("nav_canvas");
@@ -76,8 +76,8 @@
         </div>
         <div class="rightbody">
             <center>
-                <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/kinect/rgb/image_rect_color', width:256, height:192, quality:100"></div>
-                <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/topseung/out_cmd_vel'"></div>
+                <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/kinect/rgb/image_rect_color', width:256, height:192, quality:70"></div>
+                <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/topseung/web_cmd_vel'"></div>
             </center>
         </div>
 
