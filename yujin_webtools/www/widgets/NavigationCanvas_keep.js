@@ -45,21 +45,17 @@ function(declare,lang,widgetbase,dom,domClass,Nav2D,Loader)
             createCanvas : function() {
                 this.canvas = document.createElement('canvas');
                 this.canvas.id = this.canvasid || this.id+"_canvas";
-                this.canvas.width="400";//+this.canvaswidth;
-                this.canvas.height="200";//+this.canvasheight;
-//                this.canvas.style.width="85%";
-//                this.canvas.style.height="95%";//"+this.canvasheight;
+                this.canvas.width = ""+this.canvaswidth;
+                this.canvas.height = ""+this.canvasheight;
                 this.domNode.appendChild(this.canvas);
-                console.log(this.canvas.clientWidth);
-                console.log(this.canvas.clientHeight);
             },
 
             createNav2D : function() {
                 this.nav2d = new Nav2D({
                     ros:ros,
                     canvasID:this.canvas.id,
-//                    width : this.canvas.width,
-//                    height : this.canvas.height,
+                    width : this.canvas.width,
+                    height : this.canvas.height,
                     continuous : this.continuous,
                     image : this.image,
                     mapTopic : this.mapTopic,
@@ -79,11 +75,6 @@ function(declare,lang,widgetbase,dom,domClass,Nav2D,Loader)
 
             cancelGoalClicked : function() {
                 this.nav2d.cancel();
-            },
-
-            setHeight : function(width,height) {
-                this.canvas.width=width;
-                this.canvas.height=height;
             },
 
         });

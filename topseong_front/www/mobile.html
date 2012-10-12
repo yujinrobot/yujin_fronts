@@ -1,59 +1,101 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
-	<meta name="apple-mobile-web-app-capable" content="yes"/>
-	<title>Accordion</title>
+<meta charset="utf-8">
 
-    <link href="styles.css" rel="stylesheet"/>
-    <link href="../dojo_common/dojox/mobile/themes/android/android.css" rel="stylesheet"/>
-	<link href="../dojo_common/dojox/mobile/themes/common/dijit/dijit.css" rel="stylesheet"/>
-	<script type="text/javascript" src="../dojo_common/dojox/mobile/deviceTheme.js" data-dojo-config="mblThemeFiles: ['base','Accordion','TabBar','dijit.Calendar']"></script>
-	<script type="text/javascript" src="../dojo_common/dojo/dojo.js" data-dojo-config="isDebug:true,async: true, mblAlwaysHideAddressBar: true"></script>
-	<script type="text/javascript">
+<meta name="viewport" content="user-scalable=0"/>
+<title>Hello World</title>
+<!-- load Dojo and the default dojo theme, claro -->
+<link rel="stylesheet" href="mobilestyles.css" />
+<link rel="stylesheet" href="../dojo_common/dijit/themes/claro/claro.css"/>
+<script src="../dojo_common/dojo/dojo.js.uncompressed.js" data-dojo-config="async: true"></script>
+<script>
         var ros;
-
+        var mjpeg;
 		require({
                 aliases: [
-                    [ "eventemitter2","robotwebtools_amd/tools/eventemitter2"]
+                    [ "eventemitter2","rosjs/dist/eventemitter2"],
+                    [ "actionclient", "actionlibjs/actionclient"],
+                    [ "map","map2djs/map"]
                 ]
                 ,
                 packages: [ 
-                    { name:"robotwebtools_amd", location:"../../robotwebtools_amd"},
-                    { name:"yujin_webtools", location: "../../yujin_webtools"},
-                    { name:"ros", location:"../../robotwebtools_amd/ros"},
-                    { name:"roswidgets", location:"../../robotwebtools_amd/roswidgets"},
-                    { name:"jquery", location:"../../jquery_common"},
+                    { name:"jquery", location:"/jquery_common"},
+                    { name:"robotwebtools", location:"/robotwebtools_amd"},
+                    { name:"rosjs", location:"/robotwebtools_amd/rosjs"},
+                    { name:"nav2djs", location:"/robotwebtools_amd/nav2djs"},
+                    { name:"map2djs", location:"/robotwebtools_amd/map2djs"},
+                    { name:"actionlibjs", location:"/robotwebtools_amd/actionlibjs"},
+                    { name:"mjpegcanvasjs", location:"/robotwebtools_amd/mjpegcanvasjs"},
+                    { name:"yujin_webtools", location: "/yujin_webtools"},
+                    { name:"roswidgets", location:"/yujin_webtools/roswidgets"},
                 ]},
         [
-			"dojox/mobile/parser",
-			"dojox/mobile",
+            "dojo/parser",
             "dojo/ready",
-            "ros/ros",
-            "yujin_webtools/widgets/NavigationUI",
-            "roswidgets/ConnectionPanel"
+            "dojo/on",
+            "dojo/dom",
+            "dojo/window",
+            "dojo/dom-geometry",
+            "dojo/dom-style",
+            "dijit/registry",
+            "roswidgets/ConnectionPanel",
+            "rosjs/ros",
+            "mjpegcanvasjs/mjpegcanvas",
+            "yujin_webtools/widgets/NavigationCanvas",
+            "yujin_webtools/widgets/NavigationPopup2",
+            "roswidgets/MjpegViewer",
+            "yujin_webtools/controller/Arrows",
 		],
-        function(parser,mobile,ready,ROS)
+        function(parser,ready,on,dom,win,geo,style,registry,CPanel,ROS,MjpegCanvas,NavCanvas,NavPopup,MjpegViewer,Arrows)
         {
             var initialize = function() {
-                ros = new ROS('ws://localhost:9090');
+                ros = new ROS();
                 parser.parse();
+                ros.connect('ws://localhost:9090');
+
+                popup = registry.byId("nav_popup");
+                canvas =registry.byId("nav_canvas");
+
+                dojo.connect(popup,"initPoseClicked",canvas,"initPoseClicked");
+                dojo.connect(popup,"setGoalClicked",canvas,"setGoalClicked");
+                dojo.connect(popup,"cancelGoalClicked",canvas,"cancelGoalClicked");
+
+                var resize = function() {
+                    var window_size = win.getBox();
+                    var header = dom.byId('headers');
+                    var header_style = style.getComputedStyle(header);
+                    var header_size = geo.getMarginBox(header,header_style);
+                    console.log('header height is ',header_size.w);
+
+                    var calculated_height = window_size.h - header_size.h - 10;
+                    var calculated_width = header_size.w-30;
+                    console.log('cal height is',calculated_height);
+                    registry.byId('nav_canvas').setHeight(calculated_width,calculated_height-40);
+                }
+
+                window.setTimeout(resize,0);
+                dojo.connect(window,"resize",resize);
             }
+
             ready(initialize);
         }
         );
-	</script>
-
+</script>
 </head>
-<body style="visibility:hidden;">
-        <h1 data-dojo-type="dojox.mobile.Heading" style="height:100px;" >
-            <div data-dojo-type="roswidgets.ConnectionPanel"></div>
-        </h1>
-        <div id="body">                                     
-            <div data-dojo-type="yujin_webtools.widgets.NavigationUI"></div>
+<body class="claro" style="font: 14px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;">
+    <center>
+	<div id="headers" class="headers">
+        <img class="logo" src="img/logo.jpg"></img>
+        <p class="logo"> Web Navigator</p>
+        <div class="navpopup" id="nav_popup" data-dojo-type="yujin_webtools.widgets.NavigationPopup"></div>
+        <div class="webtools">
         </div>
+	</div>
+    <div id="body" class="middlepanel">
+<!--            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'robopark2.jpg', serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose'"></div>-->
+            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'robopark2.png', serverName :'/move_base', mapTopic:'/map',mapMetaTopic:'/map_metadata',initialPoseTopic:'/initialpose'"></div>
+    </div>
+    </center>
 </body>
 </html>
-
