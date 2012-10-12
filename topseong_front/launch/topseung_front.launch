@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find rosbridge_launch)/launch/simple.launch"/>
+    <node name="robot_pose_publisher" type="robot_pose_publisher" pkg="robot_pose_publisher"/>
+</launch>
