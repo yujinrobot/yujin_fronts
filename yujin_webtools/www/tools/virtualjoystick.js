@@ -3,6 +3,7 @@
    Need to check who wrote this class.
  */
 
+_DEBUG_ = false;
 (function (root, factory) {
     if(typeof define === 'function' && define.amd) {
         define([], factory);
@@ -225,7 +226,7 @@ VirtualJoystick.prototype._onMove = function(x, y)
 //               bind touch events (and mouse events for debug)                 //
 //////////////////////////////////////////////////////////////////////////////////
 
-VirtualJoystick.prototype._canvasCoords = function(event)
+VirtualJoystick.prototype._canvasCoords = function(x,y)
 {
   var totalOffsetX = 0;
   var totalOffsetY = 0;
@@ -237,7 +238,7 @@ VirtualJoystick.prototype._canvasCoords = function(event)
   }
   while(currentElement = currentElement.offsetParent)
 
-  return {x:event.clientX - totalOffsetX, y:event.clientY - totalOffsetY};
+  return {x:x - totalOffsetX, y:y - totalOffsetY};
 }
 
 VirtualJoystick.prototype._onMouseUp = function(event)
@@ -249,7 +250,7 @@ VirtualJoystick.prototype._onMouseDown = function(event)
 {
   event.preventDefault();
 
-  var coords = this._canvasCoords(event);
+  var coords = this._canvasCoords(event.clientX,event.clientY);
   return this._onDown(coords.x, coords.y);
 }
 
@@ -257,7 +258,7 @@ VirtualJoystick.prototype._onMouseMove = function(event)
 {
   event.preventDefault();
 
-  var coords = this._canvasCoords(event);
+  var coords = this._canvasCoords(event.clientX,event.clientY);
   return this._onMove(coords.x, coords.y);
 }
 
@@ -271,8 +272,15 @@ VirtualJoystick.prototype._onMouseOut = function(event)
 
 VirtualJoystick.prototype._onTouchStart = function(event)
 {
-  var coords = this._canvasCoords(event);
-  return this._onDown(coords.x, coords.y);
+  if (event.touches.length != 1)  return;
+
+  event.preventDefault();
+  var x = event.touches[ 0 ].pageX;
+  var y = event.touches[ 0 ].pageY;
+
+  var coords = this._canvasCoords(x,y);
+
+  return this._onDown(coords.x,coords.y);
 }
 
 VirtualJoystick.prototype._onTouchEnd = function(event)
@@ -281,7 +289,7 @@ VirtualJoystick.prototype._onTouchEnd = function(event)
 // no preventDefault to get click event on ios
 event.preventDefault();
 
-  return this._onUp()
+  return this._onUp();
 }
 
 VirtualJoystick.prototype._onTouchMove = function(event)
@@ -292,7 +300,8 @@ VirtualJoystick.prototype._onTouchMove = function(event)
 
   var x = event.touches[ 0 ].pageX;
   var y = event.touches[ 0 ].pageY;
-  return this._onMove(x, y)
+  var coords = this._canvasCoords(x,y);
+  return this._onMove(coords.x,coords.y);
 }
 
 
