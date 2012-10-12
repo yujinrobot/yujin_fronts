@@ -29,6 +29,7 @@
                     { name:"mjpegcanvasjs", location:"/robotwebtools_amd/mjpegcanvasjs"},
                     { name:"yujin_webtools", location: "/yujin_webtools"},
                     { name:"roswidgets", location:"/yujin_webtools/roswidgets"},
+                    { name:"topseung",location:"/topseong_front/js"},
                 ]},
         [
             "dojo/parser",
@@ -46,13 +47,14 @@
             "yujin_webtools/widgets/NavigationPopup2",
             "roswidgets/MjpegViewer",
             "yujin_webtools/controller/Arrows",
+            "topseung/TopseungDashboard",
 		],
         function(parser,ready,on,dom,win,geo,style,registry,CPanel,ROS,MjpegCanvas,NavCanvas,NavPopup,MjpegViewer,Arrows)
         {
             var initialize = function() {
                 ros = new ROS();
                 parser.parse();
-                ros.connect('ws://localhost:9090');
+                ros.connect('ws://192.168.10.93:9090');
 
                 popup = registry.byId("nav_popup");
                 canvas =registry.byId("nav_canvas");
@@ -90,6 +92,7 @@
         <p class="logo"> Web Navigator</p>
         <div class="navpopup" id="nav_popup" data-dojo-type="yujin_webtools.widgets.NavigationPopup"></div>
         <div class="webtools">
+            <div data-dojo-type="topseung.Dashboard"></div>
         </div>
 	</div>
     <div id="body" class="middlepanel">
