@@ -1,0 +1,50 @@
+
+required packages.
+---------------------
+* robot_pose_publisher
+svn co http://wpi-rail.googlecode.com/svn/trunk/distribution/wpi-rail-ros-pkg/robot_pose_publisher
+
+* mjpeg_server
+svn co http://svn.code.sf.net/p/bosch-ros-pkg/code/trunk/stacks/mjpeg_server
+
+* rosbridge_suite stack
+sudo apt-get install ros-fuerte-rosbridge-suite
+
+* yujin_webtools
+git clone https://github.com/yujinrobot/webtools.git yujin_webtools
+
+* webtools
+rosinstall . https://raw.github.com/RobotWebTools/rosinstall/master/robotwebtools.rosinstall
+
+* robotwebtool_amd
+git clone https://github.com/yujinrobot/robotwebtools_amd.git
+
+
+required deps
+------------------------
+
+sudo apt-get install apache2
+
+how to compile
+-------------------
+rosmake robotwebtool_amd
+rosmake mjpeg_server
+rosmake robot_pose_publisher
+
+how to start(experimental. unified version will be provided later)
+------------------
+on robot(assumes that robot related topics/srvs are online)
+0. open terminal
+1. stop apache server.
+2. sudo bash
+3. roslaunch rosbridge_launch full.launch
+
+4. open terminal
+5. roslaunch mjpeg_server mjpeg_server.launch
+
+6. open terminal
+7. rosrun robot_pose_publisher robot_pose_publisher
+
+on client(if robot url is localhost)
+1. open browser
+2. open "localhost/topseong_front/index.html" or index2.html

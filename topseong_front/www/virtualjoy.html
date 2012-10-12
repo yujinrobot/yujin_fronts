@@ -65,19 +65,21 @@
 
                 var vcanvas = dom.byId("virtualcanvas");
                 var processMessage = function(x,y) { 
+                    var z = - parseInt(x)/100.0;
+                    x = - parseInt(y)/100.0;
                     var msg = new ros.Message({
-                        position : {
+                        linear : {
                             x : x,
                             y : 0,
                             z : 0,
                         },
-                        orientation : {
+                        angular : {
                             x :0,
                             y : 0,
-                            z : y,
+                            z : z,
                         },
                         });
-                    
+                        topic.publish(msg);
                 };
 
                 var virtualstick = new VirtualStick({
