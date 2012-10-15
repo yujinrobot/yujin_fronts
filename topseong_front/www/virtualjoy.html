@@ -51,13 +51,6 @@
                 ros = new ROS();
                 parser.parse();
 
-                var popup = registry.byId("nav_popup");
-                var canvas =registry.byId("nav_canvas");
-
-                dojo.connect(popup,"initPoseClicked",canvas,"initPoseClicked");
-                dojo.connect(popup,"setGoalClicked",canvas,"setGoalClicked");
-                dojo.connect(popup,"cancelGoalClicked",canvas,"cancelGoalClicked");
-
                 var topic = new ros.Topic({
                     name : '/topseung/web_cmd_vel',
                     type : '/geometry_msgs/Twist',
@@ -103,14 +96,9 @@
         </div>
 	</div>
     <div id="body" class="middlepanel">
-        <div class="leftbody">
             <center>
             <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/kinect/rgb/image_rect_color', width:512, height:384, quality:70"></div>
-            </center>
-        </div>
-        <div class="rightbody">
-            <center>
-                <canvas id="virtualcanvas" width="192" height="192"></canvas> 
+            <canvas id="virtualcanvas" width="192" height="192"></canvas> 
             </center>
         </div>
 
