@@ -1,10 +1,11 @@
 
 define(["dojo/_base/declare",
         "dojo/_base/lang",
+        "dojo/dom-style",
         "dijit/_WidgetBase",
         "dojo/dom",
         ],
-function(declare,lang,widgetbase,dom)
+function(declare,lang,domStyle,widgetbase,dom)
 {
     var topseungDashBoard =declare("topseung.Dashboard",[widgetbase],
         {
@@ -16,6 +17,7 @@ function(declare,lang,widgetbase,dom)
             postCreate : function() {
                 this.createDiv();
                 this.createSubscribers();
+                domStyle.set(this.domNode,'vertical-align','middle');
 
                 ros.on('connection',lang.hitch(this,this.onConnect));
                 ros.on('close',lang.hitch(this,this.onClose));
@@ -32,14 +34,15 @@ function(declare,lang,widgetbase,dom)
             },
 
             createDiv : function() {
-                var div = document.createElement('div');
+                
+                var div = this.createElement(this.domNode,'Battery : ');
                 this.batteryDiv = div;
-                this.domNode.appendChild(div);
 
-                div = document.createElement('div');
-                this.onoffDiv = div;
-                this.domNode.appendChild(div);
+                div = this.createElement(this.domNode,'Mode : ');
+                this.modeDiv = div;
 
+                div = this.createElement(this.domNode,'Vel :');
+                this.velDiv = div;
             },
 
             createSubscribers : function() {
@@ -54,39 +57,42 @@ function(declare,lang,widgetbase,dom)
             },
 
             batteryListener : function(msg) {
-                this.batteryDiv.innerHTML = "";
-                var element = this.addElement('Battery',msg.battery_percentage)
-                this.batteryDiv.appendChild(element);
+                this.batteryDiv.innerHTML = msg.battery_percentage;
             },
 
             onoffDeviceListener : function(msg){
-                this.onoffDiv.innerHTML ="";
                 var element;
                 
                 if(msg.touch[3] == true)
-                    element = this.addElement('Mode','Auto');
+                    this.modeDiv.innerHTML = ' Auto';
                 else
-                    element = this.addElement('Mode','Manual');
-                this.onoffDiv.appendChild(element);
+                    this.modeDiv.innerHTML = ' Manual';
                 
                 if(msg.touch[4] == true)
-                    element = this.addElement('Velocity','Fast');
+                    this.velDiv.innerHTML = ' Fast';
                 else 
-                    element = this.addElement('Velocity','Slow');
-                this.onoffDiv.appendChild(element);
+                    this.velDiv.innerHTML = ' Slow';
             },
 
-            addElement : function(key,data)
+            createElement : function(parent,key)
             {
                  var div = document.createElement('div');
+                 
+                 div.style.display='inline-block';
+                 div.style.width='120px';
                  // key
                  var strong = document.createElement('strong');
-                 strong.innerHTML = key + ' : ';
+                 strong.style.display='inherit';
+                 strong.innerHTML = key;
 
                  div.appendChild(strong);
-                 div.innerHTML += data;
 
-                 return div;
+                 var childdiv = document.createElement('div');
+                 childdiv.style.display='inherit';
+                 div.appendChild(childdiv);
+                 parent.appendChild(div);
+
+                 return childdiv;
             },
 
         });

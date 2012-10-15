@@ -18,6 +18,7 @@ function(declare,lang,domClass,domStyle,_widgetbase,MjpegCanvas)
         height : 240,
         quality : 100,
         defaultStream : undefined,
+        showMenus : false,
 
         mjpeg : null,
 
@@ -68,6 +69,7 @@ function(declare,lang,domClass,domStyle,_widgetbase,MjpegCanvas)
                 height : this.height,
                 quality : this.quality,
                 defaultStream : this.defaultStream,
+                showMenus : this.showMenus,
                     });
 
             console.log(this.mjpeg);

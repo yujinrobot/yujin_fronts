@@ -80,7 +80,7 @@
         </div>
         <div class="rightbody">
             <center>
-            <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/wide_stereo/right/image_rect_color', width:256, height:192, quality:100"></div>
+            <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:['/r_forearm_cam/image_color', '/l_forearm_cam/image_color', '/wide_stereo/right/image_rect_color'],showMenus:true,label:['Right Arm', 'Left Arm', 'Robot View'], width:256, height:192, quality:100"></div>
          <!--   <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/topseung/joy_cmd_vel'"></div> -->
             <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/base_controller/command'"></div> 
             </center>
