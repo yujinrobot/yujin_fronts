@@ -47,6 +47,8 @@ function(declare,lang,domStyle,widgetbase,dom)
                 
                 var div = this.createElement(this.domNode,'Battery : ','120px','50%');
                 this.batteryDiv = div;
+                this.batteryDiv.style.width='48%';
+//                this.batteryDiv.style.border = '1px solid';
                 this.batteryDiv.innerHTML = '&nbsp';
 
                 div = this.createElement(this.domNode,'Mode : ','120px','50%');
@@ -71,13 +73,18 @@ function(declare,lang,domStyle,widgetbase,dom)
 
             batteryListener : function(msg) {
                 var level = parseFloat(msg.battery_percentage);
-                console.log(level);
                 /*
-                console.log(level);
                 level = level / 100;
                 level = level * 16646400;
                 level = level + 65280;
-                console.log(level.toString(16));*/
+                level = level.toString(16);
+                var tmp = level.substring(0,2);
+                level[0] = level[2];
+                level[1] = level[3];
+                level[2]=tmp[0];
+                level[3]=tmp[1];
+                console.log(level);
+                this.batteryDiv.style.backgroundColor='#'+level;*/
                 this.batteryDiv.innerHTML = msg.battery_percentage;
             },
 
