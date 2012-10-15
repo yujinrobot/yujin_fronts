@@ -61,14 +61,14 @@ body {
 }
 
 .leftbody {
-    width: 60%;
+    width: 40%;
     position:relative;
     float:left;
 }
 
 .rightbody {
     margin:10px;
-    width: 38%;
+    width: 58%;
     float:left;
     text-align:center;
 }

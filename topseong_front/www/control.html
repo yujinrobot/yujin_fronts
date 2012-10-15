@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 
-<title>Welcome to my world!</title>
+<title>Hello World</title>
 <!-- load Dojo and the default dojo theme, claro -->
-<link rel="stylesheet" href="mobilestyles.css" />
+<link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="../dojo_common/dijit/themes/claro/claro.css"/>
 <script src="../dojo_common/dojo/dojo.js.uncompressed.js" data-dojo-config="async: true"></script>
 <script>
@@ -35,48 +35,53 @@
             "dojo/ready",
             "dojo/on",
             "dojo/dom",
-            "dojo/window",
-            "dojo/dom-geometry",
-            "dojo/dom-style",
             "dijit/registry",
             "roswidgets/ConnectionPanel",
             "rosjs/ros",
             "mjpegcanvasjs/mjpegcanvas",
             "yujin_webtools/widgets/NavigationCanvas",
-            "topseung/NavigationPopup",
+            "yujin_webtools/widgets/NavigationPopup2",
             "roswidgets/MjpegViewer",
             "yujin_webtools/controller/Arrows",
+            "yujin_webtools/tools/virtualjoystick",
             "topseung/TopseungDashboard",
 		],
-        function(parser,ready,on,dom,win,geo,style,registry,CPanel,ROS,MjpegCanvas,NavCanvas,NavPopup,MjpegViewer,Arrows)
+        function(parser,ready,on,dom,registry,CPanel,ROS,MjpegCanvas,NavCanvas,NavPopup,MjpegViewer,Arrows,VirtualStick)
         {
             var initialize = function() {
                 ros = new ROS();
-                parser.parse();
                 ros.connect('ws://192.168.1.93:9090');
+                parser.parse();
 
-                popup = registry.byId("nav_popup");
-                canvas =registry.byId("nav_canvas");
+                var topic = new ros.Topic({
+                    name : '/topseung/web_cmd_vel',
+                    type : '/geometry_msgs/Twist',
+                        });
 
-                dojo.connect(popup,"initPoseClicked",canvas,"initPoseClicked");
-                dojo.connect(popup,"setGoalClicked",canvas,"setGoalClicked");
-                dojo.connect(popup,"cancelGoalClicked",canvas,"cancelGoalClicked");
+                var vcanvas = dom.byId("virtualcanvas");
+                var processMessage = function(x,y) { 
+                    var z = - parseInt(x)/100.0;
+                    x = - parseInt(y)/100.0;
+                    var msg = new ros.Message({
+                        linear : {
+                            x : x,
+                            y : 0,
+                            z : 0,
+                        },
+                        angular : {
+                            x :0,
+                            y : 0,
+                            z : z,
+                        },
+                        });
+                        topic.publish(msg);
+                };
 
-                var resize = function() {
-                    var window_size = win.getBox();
-                    var header = dom.byId('headers');
-                    var header_style = style.getComputedStyle(header);
-                    var header_size = geo.getMarginBox(header,header_style);
-                    console.log('header height is ',header_size.w);
-
-                    var calculated_height = window_size.h - header_size.h - 10;
-                    var calculated_width = header_size.w-30;
-                    console.log('cal height is',calculated_height);
-                    registry.byId('nav_canvas').setHeight(calculated_width,calculated_height-40);
-                }
-
-                window.setTimeout(resize,0);
-                dojo.connect(window,"resize",resize);
+                var virtualstick = new VirtualStick({
+                        container : vcanvas,
+                        mouseSupport : true,
+                        processMessage : processMessage,
+                });
             }
 
             ready(initialize);
@@ -85,19 +90,19 @@
 </script>
 </head>
 <body class="claro" style="font: 14px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;">
-    <center>
 	<div id="headers" class="headers">
         <img class="logo" src="img/logo.jpg"></img>
         <p class="logo2"> Web Navigator</p>
-        <div class="navpopup" id="nav_popup" data-dojo-type="topseung.NavigationPopup"></div>
         <div class="webtools">
             <div data-dojo-type="topseung.Dashboard"></div>
         </div>
 	</div>
     <div id="body" class="middlepanel">
-            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'robopark2.png', serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose'"></div>
-<!--            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'robopark2.png', serverName :'/move_base', mapTopic:'/map',mapMetaTopic:'/map_metadata',initialPoseTopic:'/initialpose'"></div>-->
+            <center>
+                <canvas id="virtualcanvas" width="256" height="256"></canvas> 
+            </center>
+        </div>
+
     </div>
-    </center>
 </body>
 </html>
