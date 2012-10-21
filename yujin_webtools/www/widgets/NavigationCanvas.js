@@ -82,6 +82,10 @@ function(declare,lang,widgetbase,dom,domClass,Nav2D,Loader)
             },
 
             setHeight : function(width,height) {
+                this.resize(width,height);
+            },
+
+            resize : function(width,height) {
                 this.canvas.width=width;
                 this.canvas.height=height;
             },

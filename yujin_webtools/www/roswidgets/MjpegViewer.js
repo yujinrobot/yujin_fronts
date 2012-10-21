@@ -48,6 +48,7 @@ function(declare,lang,domClass,domStyle,_widgetbase,MjpegCanvas)
 
         onClose : function() {
             this.center.removeChild(this.canvas);
+            this.mjpeg.destroy();
             delete this.mjpeg;
             delete this.canvas;
         },
@@ -71,8 +72,11 @@ function(declare,lang,domClass,domStyle,_widgetbase,MjpegCanvas)
                 defaultStream : this.defaultStream,
                 showMenus : this.showMenus,
                     });
+        },
 
-            console.log(this.mjpeg);
+        resize : function(width,height) {
+            this.width = width;
+            this.height = height;
         },
     });
 
