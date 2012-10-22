@@ -37,6 +37,9 @@
     "dojo/ready",
     "dojo/on",
     "dojo/dom",
+    "dojo/window",
+    "dojo/dom-geometry",
+    "dojo/dom-style",
     "dijit/registry",
     "roswidgets/ConnectionPanel",
     "rosjs/ros",
@@ -44,11 +47,27 @@
     "turtlebot/Dashboard",
     "turtlebot/PanoramaControl",
 	],
-  function(parser,ready,on,dom,registry,CPanel,ROS,MjpegViewer)
+  function(parser,ready,on,dom,win,geo,style,registry,CPanel,ROS,MjpegViewer)
   {
     var initialize = function() {
-    ros = new ROS();
-    parser.parse();
+      ros = new ROS();
+      parser.parse();
+
+      var resize = function() {
+        var window_size = win.getBox();
+        var header = dom.byId('headers');
+        var header_style = style.getComputedStyle(header);
+        var header_size = geo.getMarginBox(header,header_style);
+        console.log('header height is ',header_size.w);
+
+        var calculated_height = window_size.h - header_size.h - 50;
+        var calculated_width = header_size.w-30;
+        console.log('cal height is',calculated_height);
+        registry.byId('mjcanvas').resize(calculated_width,calculated_height-40);
+      };
+
+      window.setTimeout(resize,0);
+      dojo.connect(window,"resize",resize);
     }
 
     ready(initialize);
@@ -70,7 +89,7 @@
       <div class="panoramacontrol" data-dojo-type="turtlebot.PanoramaControl"></div>
     </div>
     <div class="bottombody">
-      <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/turtlebot_panorama/panorama', width:512, height:384, quality:70"></div>
+      <div class="mjcanvas" id="mjcanvas" data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/turtlebot_panorama/panorama', quality:100"></div>
     </div>
   </div>
 </body>

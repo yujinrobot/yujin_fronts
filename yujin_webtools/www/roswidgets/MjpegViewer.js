@@ -14,8 +14,10 @@ function(declare,lang,domClass,domStyle,_widgetbase,MjpegCanvas)
         topic : null,
         label : null,
         port : 8080,
-        width : 320,
-        height : 240,
+        mjpegWidth : 640,
+        mjpegHeight : 480,
+        canvasWidth : 400,
+        canvasHeight : 300,
         quality : 100,
         defaultStream : undefined,
         showMenus : false,
@@ -43,6 +45,7 @@ function(declare,lang,domClass,domStyle,_widgetbase,MjpegCanvas)
             if(host) {
                 console.log("url = ",host); 
                 this.createStream(host);
+                this.host = host;
             }
         },
 
@@ -56,8 +59,8 @@ function(declare,lang,domClass,domStyle,_widgetbase,MjpegCanvas)
         createStream : function(host) {
             this.canvas = document.createElement('canvas');
             this.canvas.id = this.canvas.id || this.id+"_canvas";
-            this.canvas.width = ""+this.width;
-            this.canvas.height = ""+this.height;
+            this.canvas.width = this.canvasWidth;
+            this.canvas.height = this.canvasHeight;
             this.center.appendChild(this.canvas);
 
             this.mjpeg = new MjpegCanvas({
@@ -75,8 +78,14 @@ function(declare,lang,domClass,domStyle,_widgetbase,MjpegCanvas)
         },
 
         resize : function(width,height) {
-            this.width = width;
-            this.height = height;
+            this.canvasWidth = width;
+            this.canvasHeight = height;
+
+            if(this.canvas != null) {
+              this.canvas.width = width;
+              this.canvas.height = height;
+            }
+
         },
     });
 
