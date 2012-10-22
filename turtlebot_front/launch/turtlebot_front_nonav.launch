@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find rosbridge_launch)/launch/simple.launch"/>
+    <include file="$(find mjpeg_server)/launch/mjpeg_server.launch"/>
+</launch>
