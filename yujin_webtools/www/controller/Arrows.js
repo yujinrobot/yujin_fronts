@@ -42,6 +42,10 @@ function(declare, lang,widgetbase,_TemplatedMixin,dom,domClass,Loader,template)
 		        	this.buttons[i].setDisabled(false);
         		}
                 this.pubTimer = window.setInterval(lang.hitch(this,this.pub),500);
+
+              this.connect(window,"keydown","onKeyDown");
+              this.connect(window,"keyup","onKeyUp");
+
             },
 
             onClose : function() {
@@ -49,6 +53,9 @@ function(declare, lang,widgetbase,_TemplatedMixin,dom,domClass,Loader,template)
 		        	this.buttons[i].setDisabled(true);
         		}
                 window.clearInterval(this.pubTimer);
+
+              this.disconnect(window,"keydown","onKeyDown");
+              this.disconnect(window,"keyup","onKeyUp");
 
             },
 
@@ -61,9 +68,12 @@ function(declare, lang,widgetbase,_TemplatedMixin,dom,domClass,Loader,template)
             	this.buttons.push(this.createButton(this.turnleftAttach, "Turn Left", 37));
             	this.buttons.push(this.createButton(this.turnrightAttach, "Turn Right", 39));
 
-        		for (var i = 0; i < this.buttons.length; i++) {
-		        	this.buttons[i].setDisabled(true);
-        		}
+        		  for (var i = 0; i < this.buttons.length; i++) {
+		        	  this.buttons[i].setDisabled(true);
+          		}
+
+
+
             },
 
             createButton: function(attachPoint, label, keyCode) {                                   

@@ -52,7 +52,7 @@ function(declare,lang,widgetbase,Button,on,Tooltip)
                     angle : 360,
                     interval_angle : 0,
                     snap_interval : 0.1,
-                    zvel : 0.0,
+                    zvel : 0.2,
                   });
 
               this.stopRequest = new ros.ServiceRequest({
