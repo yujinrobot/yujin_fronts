@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="apple-mobile-web-app-capable" content="yes" />
+
 <title>Welcome to my world!</title>
 <!-- load Dojo and the default dojo theme, claro -->
 <link rel="stylesheet" href="mobilestyles.css" />
@@ -28,7 +29,7 @@
                     { name:"mjpegcanvasjs", location:"/robotwebtools_amd/mjpegcanvasjs"},
                     { name:"yujin_webtools", location: "/yujin_webtools"},
                     { name:"roswidgets", location:"/yujin_webtools/roswidgets"},
-                    { name:"topseung",location:"/topseong_front/js"},
+                    { name:"topseung",location:"/topseung_front/js"},
                 ]},
         [
             "dojo/parser",
@@ -95,7 +96,7 @@
         </div>
 	</div>
     <div id="body" class="middlepanel">
-            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image: null, serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose',continuous:true"></div>
+            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'robopark2.png', serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose'"></div>
 <!--            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'robopark2.png', serverName :'/move_base', mapTopic:'/map',mapMetaTopic:'/map_metadata',initialPoseTopic:'/initialpose'"></div>-->
     </div>
     </center>
