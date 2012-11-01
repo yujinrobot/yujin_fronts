@@ -152,6 +152,7 @@
             var poseListener = new nav2D.ros.Topic({
               name : '/robot_pose',
               messageType : 'geometry_msgs/Pose'
+              throttle_rate : 100,
             });
             poseListener
                 .subscribe(function(pose) {
@@ -325,33 +326,50 @@
               });
             };
 
+            nav2D.ismousedown = false;
+            canvas.addEventListener('mousedown',function(event) {
+                if(nav2D.mode == 'none')
+                {}
+                else if(nav2D.mode == 'init') { 
+                }
+                else if(nav2D.mode == 'goal') {
+                  nav2D.ismousedown = true;
+                }
+                else {
+                  nav2D.emit('error',"Wrong mode..");
+                }
+
+                });
+
+            canvas.addEventListener('mousemove',function(event) {
+            });
+
             canvas.addEventListener('click',function(event) {
-                        if(nav2D.mode == 'none')
-                        {
-                        }
-                        else if(nav2D.mode == 'init') 
-                        {
-                          var poses = nav2D.getPoseFromEvent(event);
-                          if (poses != null) {
-                            nav2D.sendInitPose(poses[0], poses[1]);
-                          } else {
-                            nav2D.emit('error',"All of the necessary navigation information is not yet available."); 
-                          }
-                        }
-                        else if(nav2D.mode == 'goal') {
-                          var poses = nav2D.getPoseFromEvent(event);
-                          if (poses != null) {
-                            nav2D.sendGoalPose(poses[0], poses[1]);
-                          } else {
-                            nav2D.emit('error',"All of the necessary navigation information is not yet available.");
-                          }
-                        }
-                        else {
-                            nav2D.emit('error',"Wrong mode..");
-                        }
-                        nav2D.mode = 'none';
-                      }
-                    );
+                if(nav2D.mode == 'none')
+                {
+                }
+                else if(nav2D.mode == 'init') 
+                {
+                  var poses = nav2D.getPoseFromEvent(event);
+                  if (poses != null) {
+                    nav2D.sendInitPose(poses[0], poses[1]);
+                  } else {
+                    nav2D.emit('error',"All of the necessary navigation information is not yet available."); 
+                  }
+                }
+                else if(nav2D.mode == 'goal') {
+                  var poses = nav2D.getPoseFromEvent(event);
+                  if (poses != null) {
+                    nav2D.sendGoalPose(poses[0], poses[1]);
+                  } else {
+                    nav2D.emit('error',"All of the necessary navigation information is not yet available.");
+                  }
+                }
+                else {
+                    nav2D.emit('error',"Wrong mode..");
+                }
+                nav2D.mode = 'none';
+              });
 
             nav2D.setmode = function(mode) {
                 nav2D.mode = mode;
