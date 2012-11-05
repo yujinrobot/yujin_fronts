@@ -13,10 +13,13 @@ function(declare,lang,domStyle,widgetbase,dom)
             batteryType : 'sensor_integration_board_comms/PowerSystem',
             onoffDeviceTopic : '/topseung/sensors/OnOffDevice',
             onoffDeviceType : 'sensor_integration_board_comms/OnOffDevice',
+            statusSrvName : '/topseung/webbridge/status',
+            statusSrvType : '/topseung_webbridge/Status',
 
             postCreate : function() {
                 this.createDiv();
                 this.createSubscribers();
+                this.createService();
                 domStyle.set(this.domNode,'vertical-align','middle');
 
                 ros.on('connection',lang.hitch(this,this.onConnect));
@@ -28,6 +31,7 @@ function(declare,lang,domStyle,widgetbase,dom)
                 this.onoffDeviceSub.subscribe(lang.hitch(this,this.onoffDeviceListener));
                 //this.connectDiv.innerHTML = 'On';
                 this.connectDiv.style.backgroundColor ='#00FF00';
+                this.checkStatus();
             },
 
             onClose : function() {
@@ -69,6 +73,27 @@ function(declare,lang,domStyle,widgetbase,dom)
                     type : this.onoffDeviceType,
                     throttle_rate : 500,
                 });
+            },
+
+            createService : function() {
+                this.statusSrv = new ros.Service({
+                    name : this.statusSrvName,
+                    serviceType : this.statusSrvType
+                });
+            },
+
+            checkStatus : function() {
+                var req = new ros.ServiceRequest({});
+                this.statusSrv.callService(req, lang.hitch(this,this.statusResponse));
+            },
+
+            statusResponse : function(resp) {
+                                 console.log(resp.status);
+                // if the connection was disconnectedd in the middle of navigation
+                // ask user to continue
+                if(resp.status == 'disconnected') {
+                     
+                }
             },
 
             batteryListener : function(msg) {
