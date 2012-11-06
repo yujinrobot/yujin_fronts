@@ -27,18 +27,21 @@ class TopseungWebbridge(object):
     pub_bridge = {}
     action_name = '/topseung/move_base'
     action = None
+
+    last_goal = None
     
     def __init__(self):
 
         self.status = "Ready"
         self.initilized = False
+        self.isDisconnected = False
 
         # Receive rosbridge client info
         sub_clientinfo = rospy.Subscriber(self.sub_clientinfo_topic,ClientInfo, self.processClientInfo)
 
         # action client for navigation
         self.action = actionlib.SimpleActionClient(self.action_name,MoveBaseAction)
-#        self.action_result = rospy.Subscriber(self.action_name + '/result',MoveBaseActionResult,self.processResult)
+        self.action_result = rospy.Subscriber(self.action_name + '/result',MoveBaseActionResult,self.processResult)
         self.action.wait_for_server()
 
         # status for front-end
@@ -46,14 +49,17 @@ class TopseungWebbridge(object):
         srv_command = rospy.Service(self.srv_command_name,Command,self.processCommandService)
         
     def processStatusService(self,srv):
+        print "Status : " + self.status
         return StatusResponse(self.status) 
 
     def processCommandService(self,srv):
+        print "Command : " + str(srv.command)
         if srv.command == "send_goal":
-            self.last_goal = srv.pose
             goal = MoveBaseGoal()             
             goal.target_pose = srv.pose
+            self.last_goal = srv.pose
             self.action.send_goal(goal)
+            print "Here"
         elif srv.command == "cancel_goal":
             self.action.cancel_goal()
         elif srv.command == "last_goal":
@@ -64,20 +70,24 @@ class TopseungWebbridge(object):
             print "Error"
 
         return CommandResponse("OK","OK")
+    def processResult(self,msg):
+        if self.isDisconnected:
+            self.status = "Disconnected"
+            self.isDisconnected = False
+        else:
+            self.status = "Ready"
+            self.last_goal = None
 
     def processClientInfo(self,msg):
-        """
-        print len(msg.client_seed)
         if self.initilized == False and len(msg.client_seed) > 0:
             print "set"
             self.initilized = True
-            self.msg = msg
-        elif self.initilized == True:
-            if self.msg != msg:
-                self.status = "Disconnected"
+        elif self.initilized == True and len(msg.client_seed) == 0:
+            if self.last_goal:
+                self.isDisconnected = True
+                rospy.loginfo("Client disconncted. Canceling goal..")
                 self.action.cancel_goal()
-        """
-
+            self.initilized  = False
 
 
     def spin(self):

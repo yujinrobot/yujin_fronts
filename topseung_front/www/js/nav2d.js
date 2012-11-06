@@ -355,8 +355,6 @@
             });
 
             resultTopic.subscribe(function(msg) {
-                console.log(msg.status.text.search('another goal') );
-
                 if(msg.status.text.search('another goal') < 0)
                 {
                   goalX = null;
@@ -459,14 +457,6 @@
                 }
               });
               commandClient.callService(req,function(resp) {
-                  /*
-                  // compute pose 
-                  var p = nav2D.getCanvasPose(resp.pose);
-                  goalX = p[0];
-                  goalY = p[1];
-                  goalRotZ = p[2];
-                  
-                  nav2D.setmode('moving');*/
                 });
             };
 
