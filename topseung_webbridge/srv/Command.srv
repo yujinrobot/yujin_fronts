@@ -3,4 +3,3 @@ geometry_msgs/PoseStamped pose
 ---
 string result
 string status
-geometry_msgs/Pose pose

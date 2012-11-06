@@ -49,16 +49,21 @@ class TopseungWebbridge(object):
         return StatusResponse(self.status) 
 
     def processCommandService(self,srv):
-        print "Command"
         if srv.command == "send_goal":
-            self.last_goal = srv.pose.pose
-            print "Send goal"
+            self.last_goal = srv.pose
+            goal = MoveBaseGoal()             
+            goal.target_pose = srv.pose
+            self.action.send_goal(goal)
         elif srv.command == "cancel_goal":
-            print "Cancel goal"
+            self.action.cancel_goal()
+        elif srv.command == "last_goal":
+            goal = MoveBaseGoal()             
+            goal.target_pose = self.last_goal
+            self.action.send_goal(goal)
         else:
-            print "else"
-        print str(self.last_goal)
-        return CommandResponse("OK","OK",self.last_goal)
+            print "Error"
+
+        return CommandResponse("OK","OK")
 
     def processClientInfo(self,msg):
         """
@@ -73,7 +78,6 @@ class TopseungWebbridge(object):
                 self.action.cancel_goal()
         """
 
-            
 
 
     def spin(self):

@@ -68,11 +68,13 @@
             // optional color settings
             nav2D.clickColor = options.clickColor || '#543210';
             nav2D.robotColor = options.robotColor || '#012345';
-            nav2D.initialPoseTopic = options.initialPoseTopic || '/initialpose';
+            nav2D.initialPoseTopic = options.initialPoseTopic || '/topseung/initialpose';
             nav2D.commandSrv = options.commandSrv || '/topseung/webbridge/command';
             nav2D.commandSrvType = options.commandSrvType || '/topseung_webbridge/Command';
-            nav2D.resultTopic = options.resultTopic || '/topseung/webbridge/result';
+            nav2D.resultTopic = options.resultTopic || '/topseung/move_base/result';
             nav2D.resultTopicType = options.resultTopicType || '/move_base_msgs/MoveBaseActionResult';
+            nav2D.goalTopic = options.goalTopic || '/topseung/move_base/goal';
+            nav2D.goalTopicType = options.goalTopicType || '/move_base_msgs/MoveBaseActionGoal';
 
             // draw robot 
             nav2D.drawrobot = options.drawrobot;
@@ -346,10 +348,58 @@
                 name: nav2D.commandSrv,
                 servicesType : nav2D.commandSrvType
             });
+
             var resultTopic = new ros.Topic({
                 name: nav2D.resultTopic,
                 messageType : nav2D.resultTopicType 
             });
+
+            resultTopic.subscribe(function(msg) {
+                console.log(msg.status.text.search('another goal') );
+
+                if(msg.status.text.search('another goal') < 0)
+                {
+                  goalX = null;
+                }
+              });
+
+            var goalTopic = new ros.Topic({
+                name: nav2D.goalTopic,
+                messageType : nav2D.goalTopicType
+            });
+            goalTopic.subscribe(function(msg) {
+                var p = nav2D.getCanvasPose(msg.goal.target_pose.pose);
+                goalX = p[0];
+                goalY = p[1];
+                goalRotZ = p[2];
+                nav2D.setmode('moving');
+            });
+
+            nav2D.cancel = function() {
+              var req = new ros.ServiceRequest({
+                command : 'cancel_goal',
+                pose : {
+                  header : {
+                    frame_id : '/map'
+                  },
+                  pose : {
+                    position : {
+                      x : 0,
+                      y : 0,
+                      z : 0
+                    },
+                    orientation : {
+                      x : 0,
+                      y : 0,
+                      z : 0,
+                      w : 1
+                    }
+                  }
+                }
+              });
+              commandClient.callService(req,function(resp) {
+                });   
+            };
 
 
             // get the position in the world from a point clicked by the user
@@ -409,11 +459,14 @@
                 }
               });
               commandClient.callService(req,function(resp) {
+                  /*
                   // compute pose 
                   var p = nav2D.getCanvasPose(resp.pose);
                   goalX = p[0];
                   goalY = p[1];
                   goalRotZ = p[2];
+                  
+                  nav2D.setmode('moving');*/
                 });
             };
 
@@ -450,7 +503,6 @@
                  ismousedown = true;
                }
                else if(nav2D.mode == 'init') {
-                 nav2D.mode = 'insetinit';
                  ismousedown = true;
                }
                else {
@@ -480,11 +532,12 @@
 
                 if(nav2D.mode == 'init') {
                   nav2D.sendInitPose(downX, downY,quat);
+                  nav2D.setmode('none');
                 }
                 else if(nav2D.mode == 'goal')
                 {
                   nav2D.sendGoalPose(downX, downY,quat);
-                  nav2D.mode = 'moving';
+                  nav2D.setmode('none');
                 }
                 else {
                   nav2D.emit('error','mode error');
@@ -524,7 +577,6 @@
                 },
               });
               nav2D.initPosePub.publish(pose_msg);
-              nav2D.setmode('none');
             };
 
           };
