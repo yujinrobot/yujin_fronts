@@ -58,8 +58,8 @@ class TopseungWebbridge(object):
             goal = MoveBaseGoal()             
             goal.target_pose = srv.pose
             self.last_goal = srv.pose
+            rospy.sleep(1.0)
             self.action.send_goal(goal)
-            print "Here"
         elif srv.command == "cancel_goal":
             self.action.cancel_goal()
         elif srv.command == "last_goal":

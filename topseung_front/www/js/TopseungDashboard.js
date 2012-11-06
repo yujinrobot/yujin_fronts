@@ -49,6 +49,7 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
                 //this.connectDiv.innerHTML = 'Off';
                 this.connectDiv.style.backgroundColor ='#FF0000';
 //                this.connectDiv.innerHTML = 'Disconnected';
+                this.disconnectedPopup();
             },
 
             createDiv : function() {
@@ -231,6 +232,28 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
                  parent.appendChild(div);
 
                  return childdiv;
+            },
+
+            disconnectedPopup : function() 
+            {
+              var dialog = new Dialog({ title: "You have been disconnected!",style: "width: 40%; height:40%; background-color:white; vertical-align:middle", content : "Would you like to try to reconnect?<br/><br/>"});
+
+              var div = domConstruct.create('div', {}, dialog.containerNode);
+//              domStyle.set(dojo.byId(div), "float", "left");
+
+              var that = this;
+              var noBtn = new Button({ label: "Cancel", onClick: function(){ dialog.hide(); domConstruct.destroy(dialog);}});
+              var yesBtn = new Button({label: "Yes", style : "width : 60px",onClick : function() { that.reconnect(); dialog.hide(); domConstruct.destroy(dialog);}});
+
+              //adding buttons to the div, created inside the dialog
+              domConstruct.create(yesBtn.domNode,{}, div);
+              domConstruct.create(noBtn.domNode,{}, div);
+              dialog.show();
+            },
+
+            reconnect : function() 
+            {
+              ros.connect(url);
             },
 
         });

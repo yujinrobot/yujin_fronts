@@ -245,6 +245,8 @@
             var robotinc = 0.1;
 
             nav2D.drawrobot = nav2D.drawrobot || function(context,rX,rY,rRotZ) {
+              var offset = robotsize/2;
+
               context.save();
               context.translate(rX,rY);
               context.rotate(rRotZ);
@@ -265,6 +267,8 @@
             var goalsize = 4;
             var goalinc = 0.5;
             nav2D.drawgoal = nav2D.drawgoal || function(context,rX,rY,rRotZ) {
+              var offset = goalsize/2;
+
               context.save();
               context.translate(rX,rY);
               context.rotate(rRotZ);
