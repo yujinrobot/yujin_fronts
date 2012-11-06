@@ -25,6 +25,9 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
             resultTopicType : '/move_base_msgs/MoveBaseActionResult',
 
             postCreate : function() {
+
+                this.init = false;
+
                 this.createDiv();
                 this.createSubscribers();
                 this.createService();
@@ -41,6 +44,7 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
                 //this.connectDiv.innerHTML = 'On';
                 this.connectDiv.style.backgroundColor ='#00FF00';
                 this.checkStatus();
+                this.init = true;
             },
 
             onClose : function() {
@@ -49,7 +53,10 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
                 //this.connectDiv.innerHTML = 'Off';
                 this.connectDiv.style.backgroundColor ='#FF0000';
 //                this.connectDiv.innerHTML = 'Disconnected';
-                this.disconnectedPopup();
+                if(this.init)
+                  this.disconnectedPopup();
+                else
+                  this.notconnectedPopup();
             },
 
             createDiv : function() {
@@ -160,18 +167,6 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
 
             batteryListener : function(msg) {
                 var level = parseFloat(msg.battery_percentage);
-                /*
-                level = level / 100;
-                level = level * 16646400;
-                level = level + 65280;
-                level = level.toString(16);
-                var tmp = level.substring(0,2);
-                level[0] = level[2];
-                level[1] = level[3];
-                level[2]=tmp[0];
-                level[3]=tmp[1];
-                console.log(level);
-                this.batteryDiv.style.backgroundColor='#'+level;*/
                 this.batteryDiv.innerHTML = msg.battery_percentage;
             },
 
@@ -251,9 +246,27 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
               dialog.show();
             },
 
+            notconnectedPopup : function() 
+            {
+              var dialog = new Dialog({ title: "No connection",style: "width: 40%; height:40%; background-color:white; vertical-align:middle", content : "Would you like to connect?<br/><br/>"});
+
+              var div = domConstruct.create('div', {}, dialog.containerNode);
+//              domStyle.set(dojo.byId(div), "float", "left");
+
+              var that = this;
+              var noBtn = new Button({ label: "Cancel", onClick: function(){ dialog.hide(); domConstruct.destroy(dialog);}});
+              var yesBtn = new Button({label: "Yes", style : "width : 60px",onClick : function() { that.reconnect(); dialog.hide(); domConstruct.destroy(dialog);}});
+
+              //adding buttons to the div, created inside the dialog
+              domConstruct.create(yesBtn.domNode,{}, div);
+              domConstruct.create(noBtn.domNode,{}, div);
+              dialog.show();
+            },
+
             reconnect : function() 
             {
-              ros.connect(url);
+            document.location.reload(true);
+           //   ros.connect(url);
             },
 
         });

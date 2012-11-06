@@ -40,11 +40,12 @@ function(declare,lang,widgetbase,dom,domClass,Nav2D,Loader)
       },
 
       onConnect : function() {
-        this.createNav2D();
+        if(this.nav2d == null)
+          this.createNav2D();
       },
 
       onClose : function() {
-        delete this.nav2d;
+//        delete this.nav2d;
       },
 
       startup : function() {
@@ -95,6 +96,8 @@ function(declare,lang,widgetbase,dom,domClass,Nav2D,Loader)
       resize : function(width,height) {
         this.canvas.width=width;
         this.canvas.height=height;
+        this.newwidth = width;
+        this.newheight = height;
       },
 
       drawrobot : function(context,robotX,robotY,robotRotZ) {
