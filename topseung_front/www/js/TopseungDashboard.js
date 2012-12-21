@@ -21,7 +21,7 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
             statusSrvType : '/topseung_webbridge/Status',
             commandSrvName : '/topseung/webbridge/command',
             commandSrvType : '/topseung_webbridge/Command',
-            resultTopicName : '/topseung//move_base/result',
+            resultTopicName : '/topseung/move_base/result',
             resultTopicType : '/move_base_msgs/MoveBaseActionResult',
 
             postCreate : function() {
