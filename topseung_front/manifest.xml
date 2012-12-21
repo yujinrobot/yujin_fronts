@@ -9,6 +9,10 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/topseung_front</url>
 
+  <depend package="topseung_webbridge"/>
+  <depend package="rosbridge_server"/>
+  <depend package="rosapi"/>
+
 </package>
 
 
