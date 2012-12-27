@@ -1,15 +1,15 @@
 <package>
-  <description brief="turtlebot_front">
+  <description brief="kitchen_front">
 
-     turtlebot_front
+     kitchen_front
 
   </description>
   <author>Jihoon</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/turtlebot_front</url>
+  <url>http://ros.org/wiki/kitchen_front</url>
 
-  <depend package="robotwebtools_amd"/>
+  <depend package="robotwebtool_amd"/>
   <depend package="yujin_webtools"/>
   <depend package="dojo_common"/>
 </package>

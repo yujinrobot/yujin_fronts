@@ -12,6 +12,10 @@
   <depend package="topseung_webbridge"/>
   <depend package="rosbridge_server"/>
   <depend package="rosapi"/>
+  <depend package="dojo_common"/>
+  <depend package="robotwebtools_amd"/>
+  <depend package="yujin_webtools"/>
+
 
 </package>
 
