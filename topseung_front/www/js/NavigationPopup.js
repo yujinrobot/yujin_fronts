@@ -19,21 +19,21 @@ function(declare,lang,widgetbase,Button,on,NavControl)
                 dojo.connect(this.goalButton,"onClick",this,"setGoalClicked");
                 dojo.connect(this.cancelButton,"onClick",this,"cancelGoalClicked");
 
-                this.goalButton.setDisabled(true);
-                this.cancelButton.setDisabled(true);
+                this.goalButton.set('disabled',true);
+                this.cancelButton.set('disabled',true);
 
                 this.domNode.appendChild(this.goalButton.domNode);
                 this.domNode.appendChild(this.cancelButton.domNode);
             },
 
             onConnect : function() {
-                this.goalButton.setDisabled(false);
-                this.cancelButton.setDisabled(false);
+                this.goalButton.set('disabled',false);
+                this.cancelButton.set('disabled',false);
             },
 
             onClose : function() {
-                this.goalButton.setDisabled(true);
-                this.cancelButton.setDisabled(true);
+                this.goalButton.set('disabled',true);
+                this.cancelButton.set('disabled',true);
             },
 
             createButtons : function() 
