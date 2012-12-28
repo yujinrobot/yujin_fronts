@@ -1,5 +1,6 @@
 body {
-    width:99%;
+	margin: auto;
+    width:100%;
     height:100%;
 }
 
@@ -29,9 +30,10 @@ body {
 
 
 .navpopup {
-    padding-top:11px;
+    padding-top:8px;
+    padding-right:10px;
     position:relative;
-    float:left;
+    float:right;
 }
 
 .connectionpanel {
@@ -57,25 +59,12 @@ body {
 	box-sizing:border-box;
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;
-  width: 98%;
-}
-
-.leftbody {
-    width: 40%;
-    position:relative;
-    float:left;
-}
-
-.rightbody {
-    margin:10px;
-    width: 58%;
-    float:left;
-    text-align:center;
+  width: 99%;
 }
 
 .headers {
     height:15%;
-    width:98%;
+    width:99%;
     display:inline-block;
     overflow:visible;
     position:relative;
