@@ -4,7 +4,7 @@ define(["dojo/_base/declare",
         "dijit/_WidgetBase",
         "dijit/form/Button",
         "dojo/on",
-        "yujin_webtools/widgets/NavigationControl",
+        "rosdojo/navigation/NavigationControl",
         ],
 function(declare,lang,widgetbase,Button,on,NavControl)
 {
