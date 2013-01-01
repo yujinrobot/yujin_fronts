@@ -1,10 +1,10 @@
 <stack>
-  <description brief="Yujin Robot's webtools">
+  <description brief="Yujin Robot's frontends">
     Front-end tools
   </description>
   <author>Maintained by Jihoon Lee</author>
   <license>BSD</license>  
   <review status="experimental" notes=""/>
-  <url>http://ros.org/wiki/webtools_common</url>
+  <url>http://ros.org/wiki/yujin_fronts</url>
   <depend stack="webtools_common" /> 
 </stack>
