@@ -27,6 +27,7 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
             postCreate : function() {
 
                 this.init = false;
+                this.em_button = false;
 
                 this.createDiv();
                 this.createSubscribers();
@@ -62,17 +63,17 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
             createDiv : function() {
                 var div = this.createElement(this.domNode,'Connection : ','150px','80%');
                 this.connectDiv = div;
-                this.connectDiv.style.width='15%';
+                this.connectDiv.style.width='13%';
                 this.connectDiv.innerHTML = '&nbsp';
                 this.connectDiv.style.backgroundColor ='#FF0000';
                 
                 var div = this.createElement(this.domNode,'Battery : ','120px','50%');
                 this.batteryDiv = div;
-                this.batteryDiv.style.width='48%';
+                this.batteryDiv.style.width='40%';
 //                this.batteryDiv.style.border = '1px solid';
                 this.batteryDiv.innerHTML = '&nbsp';
 
-                div = this.createElement(this.domNode,'Mode : ','120px','50%');
+                div = this.createElement(this.domNode,'Mode : ','120px','53%');
                 this.modeDiv = div;
 
                 div = this.createElement(this.domNode,'Vel :','100px','50%');
@@ -173,12 +174,27 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
             onoffDeviceListener : function(msg){
                 var element;
                 
-                if(msg.touch[3] == true)
-                    this.modeDiv.innerHTML = ' Auto';
-                else
-                    this.modeDiv.innerHTML = ' Manual';
+                if(msg.emergency_button == false) {
+                  if(msg.touch[3] == true)
+                      this.modeDiv.innerHTML = ' Auto';
+                  else {
+                      if (msg.touch[4] == false)
+                        this.modeDiv.innerHTML = ' Semi-Auto';
+                      else
+                        this.modeDiv.innerHTML = ' Manual';
+                  }
+                  this.em_button = false;
+                }
+                else {
+                  this.modeDiv.innerHTML = ' Stop';
+                  if(this.em_button == false) {
+                    this.cancelGoal();
+                    this.em_button = true;
+                  }
+                }
+
                 
-                if(msg.touch[4] == true)
+                if(msg.touch[1] == true)
                     this.velDiv.innerHTML = ' Fast';
                 else 
                     this.velDiv.innerHTML = ' Slow';
@@ -268,6 +284,8 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
             document.location.reload(true);
            //   ros.connect(url);
             },
+
+            cancelGoal : function()  {},
 
         });
 

@@ -44,10 +44,12 @@
 
                 popup = registry.byId("nav_popup");
                 canvas =registry.byId("nav_canvas");
+                dashboard = registry.byId("dashboard");
 
                 dojo.connect(popup,"initPoseClicked",canvas,"initPoseClicked");
                 dojo.connect(popup,"setGoalClicked",canvas,"setGoalClicked");
                 dojo.connect(popup,"cancelGoalClicked",canvas,"cancelGoalClicked");
+                dojo.connect(dashboard,"cancelGoal",canvas,"cancelGoalClicked");
 
                 var resize = function() {
                     var window_size = win.getBox();
