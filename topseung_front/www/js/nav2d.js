@@ -482,8 +482,10 @@
              return value;
            }
 
-           canvas.addEventListener('mousedown',function(event) {
-               
+
+
+
+           var canvasMouseDownEvent = function(event) {
              if(nav2D.mode == 'goal' || nav2D.mode =='init') {
 
                var poses = nav2D.getPoseFromEvent(event);
@@ -503,25 +505,30 @@
                  nav2D.emit('error','mode error');
                }
              }
-            });
+           };
 
-           canvas.addEventListener('mousemove',function(event) {
+           var canvasMoveEvent = function(event) {
                if(ismousedown) {
                  var poses = nav2D.getPoseFromEvent(event);
+                console.log("touch move");
+                console.log(poses[2]);
+                console.log(poses[3]);
+
                  clickZX = poses[2];
                  clickZY = poses[3];
                }
-             });
+           };
 
-           canvas.addEventListener('mouseup',function(event) {
+           var canvasMouseUpEvent = function(event) {
               if(ismousedown) {
                 var poses = nav2D.getPoseFromEvent(event);
-                clickZX = poses[2];
-                clickZY = poses[3];
+                // commented out touchend returned weird pageX and pageY
+//                clickZX = poses[2];
+//                clickZY = poses[3];
                  
                 var angle = Math.atan2((clickZY - clickY),(clickZX-clickX));
                 var quat = nav2D.getQuatFromRPY(0,0,-angle);
-
+                                                                                       
                 ismousedown = false;
 
                 if(nav2D.mode == 'init') {
@@ -537,11 +544,35 @@
                   nav2D.emit('error','mode error');
                 }
               }
-            });
-
-            nav2D.setmode = function(mode) {
-              nav2D.mode = mode;
             };
+
+           var canvasTouchDownEvent = function(event) {
+             canvasMouseDownEvent(event);
+             event.preventDefault();
+           };
+
+           canvas.addEventListener('mousedown',canvasMouseDownEvent);
+           canvas.addEventListener('touchstart',canvasTouchDownEvent);
+
+           var canvasTouchMoveEvent = function(event) {
+             canvasMoveEvent(event);
+             event.preventDefault();
+           };
+
+           canvas.addEventListener('mousemove',canvasMoveEvent);
+           canvas.addEventListener('touchmove',canvasTouchMoveEvent);
+
+           var canvasTouchUpEvent = function(event) {
+             canvasMouseUpEvent(event);
+             event.preventDefault();
+           };
+
+           canvas.addEventListener('mouseup',canvasMouseUpEvent);
+           canvas.addEventListener('touchend',canvasMouseUpEvent);
+
+           nav2D.setmode = function(mode) {
+              nav2D.mode = mode;
+           };
 
             nav2D.initPosePub = new nav2D.ros.Topic({
               name : nav2D.initialPoseTopic,
