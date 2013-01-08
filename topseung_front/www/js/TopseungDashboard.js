@@ -174,7 +174,7 @@ function(declare,lang,domStyle,widgetbase,dom,domConstruct,Dialog,Button,Tooltip
             onoffDeviceListener : function(msg){
                 var element;
                 
-                if(msg.emergency_button == false) {
+                if(msg.emergency_button[0] == false) {
                   if(msg.touch[3] == true)
                       this.modeDiv.innerHTML = ' Auto';
                   else {
