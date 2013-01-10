@@ -8,53 +8,31 @@
 <!-- load Dojo and the default dojo theme, claro -->
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="/dojo_common/dijit/themes/claro/claro.css"/>
-<script src="/dojo_common/dojo/dojo.js.uncompressed.js" data-dojo-config="async: true"></script>
+<script src="/yujin_webtools/config.js"></script>
+<script src="/dojo_common/dojo/dojo.js.uncompressed.js"></script>
 <script>
-        var ros;
-        var mjpeg;
-		require({
-                aliases: [
-                    [ "eventemitter2","rosjs/dist/eventemitter2"],
-                    [ "actionclient", "actionlibjs/actionclient"],
-                    [ "map","map2djs/map"]
-                ]
-                ,
-                packages: [ 
-                    { name:"jquery", location:"/jquery_common"},
-                    { name:"robotwebtools", location:"/robotwebtools_amd"},
-                    { name:"rosjs", location:"/robotwebtools_amd/rosjs"},
-                    { name:"nav2djs", location:"/robotwebtools_amd/nav2djs"},
-                    { name:"map2djs", location:"/robotwebtools_amd/map2djs"},
-                    { name:"actionlibjs", location:"/robotwebtools_amd/actionlibjs"},
-                    { name:"mjpegcanvasjs", location:"/robotwebtools_amd/mjpegcanvasjs"},
-                    { name:"yujin_webtools", location: "/yujin_webtools"},
-                    { name:"roswidgets", location:"/yujin_webtools/roswidgets"},
-                ]},
-        [
-            "dojo/parser",
-            "dojo/ready",
-            "dojo/on",
-            "dojo/dom",
-            "dijit/registry",
-            "roswidgets/ConnectionPanel",
-            "rosjs/ros",
-            "mjpegcanvasjs/mjpegcanvas",
-            "yujin_webtools/widgets/NavigationCanvas",
-            "yujin_webtools/widgets/NavigationPopup2",
-            "roswidgets/MjpegViewer",
-            "yujin_webtools/controller/Arrows",
+  var ros;
+  var mjpeg;
+ 	
+  require({
+    packages: [ 
+      { name:"rosdojo", location:"/rosdojo"},
+    ]},
+    [
+       "dojo/parser", "dojo/ready", "dojo/on", "dojo/dom", "dijit/registry",        
+       "rosdojo/widgets/ConnectionPanel",
+       "rosdojo/widgets/MjpegViewerWrapper",
+       "rosdojo/controller/Arrows",
 		],
-        function(parser,ready,on,dom,registry,CPanel,ROS,MjpegCanvas,NavCanvas,NavPopup,MjpegViewer,Arrows)
-        {
-            var initialize = function() {
-                ros = new ROS();
-                parser.parse();
+    function(parser,ready,on,dom,registry,CPanel,MjpegCanvas,MjpegViewer,Arrows)
+    {
+      var initialize = function() {
+        parser.parse();
+      }
 
-            }
-
-            ready(initialize);
-        }
-        );
+        ready(initialize);
+    }
+  );
 </script>
 </head>
 <body class="claro" style="font: 14px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;">
@@ -62,18 +40,18 @@
         <img class="logo" src="/turtlebot_front/img/logo.jpg"></img>
         <p class="logo"> Web Navigator</p>
         <div class="webtools">
-            <div class="connectionpanel" data-dojo-type="roswidgets.ConnectionPanel"></div>
+            <div class="connectionpanel" data-dojo-type="rosdojo.widgets.ConnectionPanel"></div>
         </div>
 	</div>
     <div id="body" class="middlepanel">
         <div class="leftbody">
         <center>
-            <div data-dojo-type="roswidgets.MjpegViewer" data-dojo-props="topic:'/camera/rgb/image_color', width:512, height:384, quality:70"></div>
+            <div data-dojo-type="rosdojo.widgets.MjpegViewerWrapper" data-dojo-props="topic:'/camera/rgb/image_rect_color', width:512, height:384, quality:70"></div>
             </center>
         </div>
         <div class="rightbody">
             <center>
-                <div data-dojo-type="yujin_webtools.controller.Arrows" data-dojo-props="topic:'/cmd_vel'"></div> 
+                <div data-dojo-type="rosdojo.controller.Arrows" data-dojo-props="topic:'/mobile_base/commands/velocity'"></div> 
             </center>
         </div>
 
