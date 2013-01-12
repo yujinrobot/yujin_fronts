@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<title>Welcome to my world!</title>
+<!-- load Dojo and the default dojo theme, claro -->
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="../dojo_common/dijit/themes/claro/claro.css"/>
+<script src="../yujin_webtools/config.js"></script>
+<script src="../dojo_common/dojo/dojo.js.uncompressed.js"></script>
+<script>
+        var ros;
+        var mjpeg;
+        var url = 'ws://localhost:9090';
+		require({
+      packages: [ 
+        { name:"rosdojo", location:"/rosdojo"},
+        { name:"topseung",location:"/topseung_front/js"},
+      ]},
+      [
+         "dojo/parser",
+         "dojo/ready",
+         "dojo/on",
+         "dojo/dom",
+         "dojo/window",
+         "dojo/dom-geometry",
+         "dojo/dom-style",
+         "dijit/registry",
+         "rosdojo/widgets/ConnectionPanel",
+         "rosjs/ros",
+         "topseung/NavigationCanvas",
+         "rosdojo/navigation/NavigationPopup2",
+         "topseung/TopseungDashboard",
+		],
+        function(parser,ready,on,dom,win,geo,style,registry,CPanel,ROS,NavCanvas,NavPopup)
+        {
+            var initialize = function() {
+                ros = new ROS();
+                parser.parse();
+                ros.connect(url);
+
+                popup = registry.byId("nav_popup");
+                canvas =registry.byId("nav_canvas");
+                dashboard = registry.byId("dashboard");
+
+                dojo.connect(popup,"initPoseClicked",canvas,"initPoseClicked");
+                dojo.connect(popup,"setGoalClicked",canvas,"setGoalClicked");
+                dojo.connect(popup,"cancelGoalClicked",canvas,"cancelGoalClicked");
+                dojo.connect(dashboard,"cancelGoal",canvas,"cancelGoalClicked");
+
+                var resize = function() {
+                    var window_size = win.getBox();
+                    var header = dom.byId('headers');
+                    var header_style = style.getComputedStyle(header);
+                    var header_size = geo.getMarginBox(header,header_style);
+                    console.log('header height is ',header_size.w);
+
+                    var calculated_height = window_size.h - header_size.h - 10;
+                    var calculated_width = header_size.w-30;
+                    console.log('cal height is',calculated_height);
+                    registry.byId('nav_canvas').setHeight(calculated_width,calculated_height-40);
+                }
+
+                window.setTimeout(resize,0);
+                dojo.connect(window,"resize",resize);
+            }
+
+            ready(initialize);
+        }
+        );
+</script>
+</head>
+<body class="claro" style="font: 14px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;">
+    <center>
+	<div id="headers" class="headers">
+        <img class="logo" src="img/logo.jpg"></img>
+        <p class="logo2"> Web Navigator</p>
+        <div class="navpopup" id="nav_popup" data-dojo-type="rosdojo.navigation.NavigationPopup"></div>
+        <div class="webtools">
+            <div data-dojo-type="topseung.Dashboard"></div>
+        </div>
+	</div>
+    <div id="body" class="middlepanel">
+            <div class="navcanvas" id="nav_canvas" data-dojo-type="topseung.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, roboticon:null,image:null, serverName :'/topseung/move_base', mapTopic:'/topseung/map',mapMetaTopic:'/topseung/map_metadata',initialPoseTopic:'/topseung/initialpose'"></div>
+<!--            <div class="navcanvas" id="nav_canvas" data-dojo-type="yujin_webtools.widgets.NavigationCanvas" data-dojo-props="canvaswidth:512, canvasheight:384, image:'robopark2.png', serverName :'/move_base', mapTopic:'/map',mapMetaTopic:'/map_metadata',initialPoseTopic:'/initialpose'"></div>-->
+    </div>
+    </center>
+</body>
+</html>

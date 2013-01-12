@@ -3,12 +3,17 @@
     Date : 10.09.2012
  */
 
+require({
+packages: [
+  { name:"rosdojo",location:"/rosdojo"},
+  ]});
+
 define(["dojo/_base/declare",
         "dojo/_base/lang",
         "dijit/_WidgetBase",
         "dojo/dom-style",
         "dijit/form/Button",
-        "yujin_webtools/widgets/Loader",
+        "rosdojo/utils/Loader",
         "dijit/Tooltip",
         ],
 function(declare,lang,widgetbase,domStyle,Button,Loader,Tooltip)
@@ -63,7 +68,6 @@ function(declare,lang,widgetbase,domStyle,Button,Loader,Tooltip)
             },
 
             display: function(data) {
-                       console.log(data);
                 if(data == undefined || data == null) { 
                     if(this.currentDisplay != null) {
                         this.domNode.removeChild(this.currentDisplay); 
@@ -83,15 +87,15 @@ function(declare,lang,widgetbase,domStyle,Button,Loader,Tooltip)
                 }
 
                 if(data.status == 'Available') {
-                    this.start_button.setAttribute('disabled',false);
+                    this.start_button.set('disabled',false);
                 }
                 else
-                    this.start_button.setAttribute('disabled',true);
+                    this.start_button.set('disabled',true);
 
                 if(data.status == 'Running')
-                    this.stop_button.setAttribute('disabled',false);
+                    this.stop_button.set('disabled',false);
                 else
-                    this.stop_button.setAttribute('disabled',true);
+                    this.stop_button.set('disabled',true);
 
                 div.appendChild(this.start_button.domNode);
                 div.appendChild(this.stop_button.domNode);
@@ -101,7 +105,7 @@ function(declare,lang,widgetbase,domStyle,Button,Loader,Tooltip)
             },
 
             startApp : function(e) {
-                this.start_button.setAttribute('disabled',true);
+                this.start_button.set('disabled',true);
 
                 this.srvRequest = new ros.ServiceRequest({name:this.currentData.name[0]});
                 var that = this;
@@ -115,12 +119,12 @@ function(declare,lang,widgetbase,domStyle,Button,Loader,Tooltip)
                 // if the app is started 
                 if(result.started) {
                     message = result.message
-                    this.stop_button.setAttribute('disabled',false);
-                    this.start_button.setAttribute('disabled',true);
+                    this.stop_button.set('disabled',false);
+                    this.start_button.set('disabled',true);
                 }
                 else {
                     message = result.message
-                    this.start_button.setAttribute('disabled',false);
+                    this.start_button.set('disabled',false);
                 }
 
                 Tooltip.show(result.message,that.start_button.domNode,["below"]);
@@ -128,7 +132,7 @@ function(declare,lang,widgetbase,domStyle,Button,Loader,Tooltip)
             },
 
             stopApp : function(e) {
-                this.stop_button.setAttribute('disabled',true);
+                this.stop_button.set('disabled',true);
 
                 this.srvRequest = new ros.ServiceRequest({name:this.currentData.name[0]});
                 var that = this;
@@ -140,11 +144,11 @@ function(declare,lang,widgetbase,domStyle,Button,Loader,Tooltip)
 
                 // if the app is started 
                 if(result.stopped) {
-                    this.stop_button.setAttribute('disabled',true);
-                    this.start_button.setAttribute('disabled',false);
+                    this.stop_button.set('disabled',true);
+                    this.start_button.set('disabled',false);
                 }
                 else {
-                    this.stop_button.setAttribute('disabled',false);
+                    this.stop_button.set('disabled',false);
                 }
 
                 Tooltip.show(result.message,that.stop_button.domNode,["below"]);

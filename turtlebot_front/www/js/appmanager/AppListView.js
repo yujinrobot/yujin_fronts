@@ -3,6 +3,12 @@
     Date : 10.04.2012
  */
 
+
+require({
+packages: [
+  { name:"rosdojo",location:"/rosdojo"},
+  ]});
+
 define(["dojo/_base/declare",
         "dojo/_base/lang",
         "dijit/_WidgetBase",
@@ -11,7 +17,7 @@ define(["dojo/_base/declare",
         "dojox/grid/DataGrid",
         "dojo/data/ItemFileWriteStore",
         "dijit/form/Button",
-        "yujin_webtools/widgets/Loader",
+        "rosdojo/utils/Loader",
         "dijit/Tooltip",
         ],
 function(declare,lang,widgetbase,domStyle,on,DataGrid,Store,Button,Loader,Tooltip)
@@ -35,7 +41,7 @@ function(declare,lang,widgetbase,domStyle,on,DataGrid,Store,Button,Loader,Toolti
                 this.srvRequest = new ros.ServiceRequest({});
 
                 this.createDataGrid();
-                this.createButton();
+//                this.createButton();
 
                 ros.on('error',function(e) { console.log(e);});
                 ros.on('connection',lang.hitch(this,this.onConnect)); 
@@ -46,11 +52,11 @@ function(declare,lang,widgetbase,domStyle,on,DataGrid,Store,Button,Loader,Toolti
 
             onConnect : function() {
                 this.updateAppList();
-//                this.intervalInt = window.setInterval(lang.hitch(this,this.updateAppList),1000);
+                this.intervalInt = window.setInterval(lang.hitch(this,this.updateAppList),1000);
             },
 
             onClose : function() {
-//                window.clearInterval(this.intervalInt);
+                window.clearInterval(this.intervalInt);
                 var data = this.createData([]);
                 this.currentStore.close();
                 this.currentStore = new Store({data:data});
@@ -80,9 +86,10 @@ function(declare,lang,widgetbase,domStyle,on,DataGrid,Store,Button,Loader,Toolti
                     structure :layout,
                     rowSelector : '20px'
                     });
+
                 domStyle.set(this.grid.domNode,"height","300px");
                 domStyle.set(this.grid.domNode,"width","95%");
-                domStyle.set(this.domNode,"margin","10px");
+                domStyle.set(this.domNode,"margin","30px");
 
                 this.domNode.appendChild(this.grid.domNode);
                 this.grid.startup();

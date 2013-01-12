@@ -21,7 +21,7 @@
     [
        "dojo/parser", "dojo/ready", "dojo/on", "dojo/dom", "dijit/registry",        
        "rosdojo/widgets/ConnectionPanel",
-       "rosdojo/widgets/MjpegViewerWrapper",
+       "rosdojo/widgets/MjpegViewer",
        "rosdojo/controller/Arrows",
 		],
     function(parser,ready,on,dom,registry,CPanel,MjpegCanvas,MjpegViewer,Arrows)
@@ -46,7 +46,7 @@
     <div id="body" class="middlepanel">
         <div class="leftbody">
         <center>
-            <div data-dojo-type="rosdojo.widgets.MjpegViewerWrapper" data-dojo-props="topic:'/camera/rgb/image_rect_color', width:512, height:384, quality:70"></div>
+            <div data-dojo-type="rosdojo.widgets.MjpegViewer" data-dojo-props="topic:'/camera/rgb/image_rect_color', width:512, height:384, quality:70"></div>
             </center>
         </div>
         <div class="rightbody">

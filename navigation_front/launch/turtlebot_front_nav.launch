@@ -1,5 +1,5 @@
 <launch>
     <include file="$(find rosbridge_launch)/launch/simple.launch"/>
-    <include file="$(find mjpeg_server)/launch/mjpeg_server.launch"/>
     <node name="robot_pose_publisher" type="robot_pose_publisher" pkg="robot_pose_publisher"/>
+    <node name="web_navbridge" type="webbridge.py" pkg="web_navbridge"/>
 </launch>
