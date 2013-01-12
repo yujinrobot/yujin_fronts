@@ -6,7 +6,7 @@
 
 require({
 packages: [
-  { name:"rosdojo",location:"/rosdojo"},
+  { name:"rosdojo",location:"rosdojo"},
   ]});
 
 define(["dojo/_base/declare",

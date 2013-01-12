@@ -7,16 +7,16 @@
 <title>Hello World</title>
 <!-- load Dojo and the default dojo theme, claro -->
 <link rel="stylesheet" href="styles.css" />
-<link rel="stylesheet" href="/dojo_common/dijit/themes/claro/claro.css"/>
-<script src="/yujin_webtools/config.js"></script>
-<script src="/dojo_common/dojo/dojo.js.uncompressed.js"></script>
+<link rel="stylesheet" href="../../dojo_common/dijit/themes/claro/claro.css"/>
+<script src="../../yujin_webtools/config.js"></script>
+<script src="../../dojo_common/dojo/dojo.js.uncompressed.js"></script>
 <script>
   var ros;
   var mjpeg;
  	
   require({
     packages: [ 
-      { name:"rosdojo", location:"/rosdojo"},
+      { name:"rosdojo", location:"rosdojo"},
     ]},
     [
        "dojo/parser", "dojo/ready", "dojo/on", "dojo/dom", "dijit/registry",        
@@ -37,16 +37,16 @@
 </head>
 <body class="claro" style="font: 14px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;">
 	<div id="headers" class="headers">
-        <img class="logo" src="/turtlebot_front/img/logo.jpg"></img>
+        <img class="logo" src="../img/logo.jpg"></img>
         <p class="logo"> Web Navigator</p>
         <div class="webtools">
-            <div class="connectionpanel" data-dojo-type="rosdojo.widgets.ConnectionPanel"></div>
+            <div class="connectionpanel" data-dojo-type="rosdojo/widgets/ConnectionPanel"></div>
         </div>
 	</div>
     <div id="body" class="middlepanel">
         <div class="leftbody">
         <center>
-            <div data-dojo-type="rosdojo.widgets.MjpegViewer" data-dojo-props="topic:'/camera/rgb/image_rect_color', width:512, height:384, quality:70"></div>
+            <div data-dojo-type="rosdojo/widgets/MjpegViewer" data-dojo-props="topic:'/camera/rgb/image_rect_color', width:512, height:384, quality:70"></div>
             </center>
         </div>
         <div class="rightbody">
